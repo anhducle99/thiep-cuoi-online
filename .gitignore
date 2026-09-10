@@ -47,3 +47,4 @@ miu_styles.css
 nodes_summary.json
 
 .vercel
+.env*
