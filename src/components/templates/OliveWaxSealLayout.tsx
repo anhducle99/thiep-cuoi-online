@@ -8,6 +8,7 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { useGuestName } from "@/components/GuestNameProvider";
 import { useMusicOptional } from "@/components/MusicProvider";
 import { getCountdown, type CountdownParts, cn } from "@/lib/utils";
+import { getCurrentSlug } from "@/lib/currentSlug";
 
 function isDefaultStock(src?: string) {
   return !src || src.includes("DSC0") || src.includes("Album");
@@ -880,7 +881,9 @@ function GuestbookSection() {
   }, [guestName]);
 
   useEffect(() => {
-    fetch("/api/wishes")
+    const slug = getCurrentSlug();
+    const query = slug ? `?slug=${encodeURIComponent(slug)}` : "";
+    fetch(`/api/wishes${query}`)
       .then((r) => r.json())
       .then((d) => setWishes(d.wishes ?? []))
       .catch(() => {});
@@ -895,6 +898,7 @@ function GuestbookSection() {
     setSubmitting(true);
     setStatus("");
     try {
+      const slug = getCurrentSlug();
       const res = await fetch("/api/wishes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -902,6 +906,7 @@ function GuestbookSection() {
           name: name.trim(),
           message: message.trim(),
           invitedAs: guestName ?? undefined,
+          slug,
         }),
       });
       const resData = await res.json();
@@ -1057,6 +1062,7 @@ function GiftAndRsvpSection({ data }: { data: WeddingData }) {
     e.preventDefault();
     setSubmitting(true);
     try {
+      const slug = getCurrentSlug();
       await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1069,6 +1075,7 @@ function GiftAndRsvpSection({ data }: { data: WeddingData }) {
               : "attending_1"
             : "declined",
           notes,
+          slug,
         }),
       });
       setSubmitted(true);

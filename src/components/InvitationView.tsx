@@ -215,11 +215,17 @@ function InvitationViewInner({
   );
 }
 
-export function InvitationView({ data }: { data: WeddingData }) {
+export function InvitationView({
+  data,
+  slug,
+}: {
+  data: WeddingData;
+  slug?: string;
+}) {
   const [musicOn, setMusicOn] = useState(false);
 
   return (
-    <GuestNameProvider>
+    <GuestNameProvider slug={slug}>
       <MusicProvider src={data.theme.music} autoPlay={musicOn}>
         <InvitationViewInner
           data={data}

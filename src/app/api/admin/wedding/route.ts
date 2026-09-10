@@ -13,10 +13,11 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const template = url.searchParams.get("template") || undefined;
+  const slug = url.searchParams.get("slug") || undefined;
   const activeTemplate = await getActiveTemplate();
 
   return NextResponse.json({
-    wedding: await loadWeddingData(template),
+    wedding: await loadWeddingData(template, slug),
     activeTemplate,
     storage: getStorageMode(),
   });
@@ -27,10 +28,14 @@ export async function PUT(request: Request) {
     const denied = requireAdmin(request);
     if (denied) return denied;
 
+    const url = new URL(request.url);
+    const slugFromQuery = url.searchParams.get("slug") || undefined;
+
     const body = (await request.json().catch(() => null));
     const data = (body?.wedding ?? body) as WeddingData | null;
     const templateId = (body?.templateId || data?.theme?.template) as string | undefined;
     const setAsActive = Boolean(body?.setAsActive);
+    const slug = body?.slug || slugFromQuery;
 
     if (body?.setActiveOnly && templateId) {
       await setActiveTemplate(templateId as ThemeConfig["template"]);
@@ -44,7 +49,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    const saved = await saveWeddingData(data, templateId, setAsActive);
+    const saved = await saveWeddingData(data, templateId, setAsActive, slug);
     const activeTemplate = await getActiveTemplate();
     return NextResponse.json({ wedding: saved, activeTemplate, success: true });
   } catch (err) {

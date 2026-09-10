@@ -22,7 +22,7 @@ const templates: Array<{
   { id: "song-hy-do", name: "Song Hỷ Đỏ", description: "Truyền thống, rực rỡ", colors: "from-red-950 via-red-800 to-amber-300" },
 ];
 
-export function AdminWeddingEditor() {
+export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
   const [selectedTemplate, setSelectedTemplate] = useState<ThemeConfig["template"]>("olive-wax-seal");
   const [activeTemplate, setActiveTemplate] = useState<ThemeConfig["template"]>("olive-wax-seal");
   const [data, setData] = useState<WeddingData | null>(null);
@@ -42,7 +42,8 @@ export function AdminWeddingEditor() {
     setLoading(true);
     setMessage("");
     try {
-      const res = await fetch(`/api/admin/wedding?template=${tplId}`, {
+      const slugParam = slug && slug !== "default" ? `&slug=${encodeURIComponent(slug)}` : "";
+      const res = await fetch(`/api/admin/wedding?template=${tplId}${slugParam}`, {
         headers: adminHeaders(),
         cache: "no-store",
       });
@@ -60,7 +61,7 @@ export function AdminWeddingEditor() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [slug]);
 
   useEffect(() => {
     void loadTemplateData(selectedTemplate);
@@ -157,7 +158,8 @@ export function AdminWeddingEditor() {
       return;
     }
     try {
-      const res = await fetch(`/api/admin/wedding?template=${fromTpl}`, {
+      const slugParam = slug && slug !== "default" ? `&slug=${encodeURIComponent(slug)}` : "";
+      const res = await fetch(`/api/admin/wedding?template=${fromTpl}${slugParam}`, {
         headers: adminHeaders(),
         cache: "no-store",
       });
@@ -240,19 +242,25 @@ export function AdminWeddingEditor() {
     setBusy(true);
     setMessage("");
     try {
-      const res = await fetch("/api/admin/wedding", {
+      const slugParam = slug && slug !== "default" ? `?slug=${encodeURIComponent(slug)}` : "";
+      const res = await fetch(`/api/admin/wedding${slugParam}`, {
         method: "PUT",
         headers: adminHeaders(),
         body: JSON.stringify({
           wedding: data,
           templateId: selectedTemplate,
-          setAsActive: selectedTemplate === activeTemplate,
+          setAsActive: slug && slug !== "default" ? false : selectedTemplate === activeTemplate,
+          slug: slug !== "default" ? slug : undefined,
         }),
       });
       const result = await res.json().catch(() => ({}));
       setBusy(false);
       if (res.ok) {
-        setMessage(`Đã lưu dữ liệu riêng cho mẫu "${currentTplMeta?.name}" thành công!`);
+        setMessage(
+          slug && slug !== "default"
+            ? `Đã lưu dữ liệu cho đám cưới "/${slug}" thành công!`
+            : `Đã lưu dữ liệu riêng cho mẫu "${currentTplMeta?.name}" thành công!`,
+        );
       } else {
         setMessage(result.error ?? "Không lưu được.");
       }
@@ -271,17 +279,20 @@ export function AdminWeddingEditor() {
 
   return (
     <div className="mx-auto max-w-4xl pb-16">
-      {/* Header & Quick Links */}
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="font-serif text-2xl font-bold text-crimson">Quản lý các Mẫu Thiệp Độc Lập</h2>
+          <h2 className="font-serif text-2xl font-bold text-crimson">
+            {slug && slug !== "default" ? `Chỉnh sửa nội dung thiệp: /${slug}` : "Quản lý các Mẫu Thiệp Độc Lập"}
+          </h2>
           <p className="mt-1 text-sm text-ink/60">
-            Mỗi mẫu thiệp lưu một bộ dữ liệu, hình ảnh và mã QR riêng biệt, không bị trùng hay đè lên nhau.
+            {slug && slug !== "default"
+              ? "Tùy biến thông tin cặp đôi, ngày giờ hôn lễ, tài khoản mừng và ảnh cưới cho đám cưới này."
+              : "Mỗi mẫu thiệp lưu một bộ dữ liệu, hình ảnh và mã QR riêng biệt, không bị trùng hay đè lên nhau."}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <a
-            href={`/?template=${selectedTemplate}`}
+            href={slug && slug !== "default" ? `/${slug}?template=${selectedTemplate}` : `/?template=${selectedTemplate}`}
             target="_blank"
             rel="noreferrer"
             className="rounded-xl border border-wine/30 bg-white px-4 py-2.5 text-sm font-semibold text-crimson hover:bg-cream-light transition shadow-sm"
@@ -289,12 +300,12 @@ export function AdminWeddingEditor() {
             Xem thử mẫu đang chọn ↗
           </a>
           <a
-            href="/"
+            href={slug && slug !== "default" ? `/${slug}` : "/"}
             target="_blank"
             rel="noreferrer"
             className="rounded-xl bg-wine px-4 py-2.5 text-sm font-semibold text-cream-light hover:bg-wine-dark transition shadow"
           >
-            Xem Trang Chủ ↗
+            {slug && slug !== "default" ? "Xem Trang Thiệp Này ↗" : "Xem Trang Chủ ↗"}
           </a>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { useGuestName } from "@/components/GuestNameProvider";
 import type { SectionProps, Wish } from "@/types/wedding";
+import { getCurrentSlug } from "@/lib/currentSlug";
 
 export function Guestbook({ className }: SectionProps) {
   const { guestName } = useGuestName();
@@ -23,7 +24,9 @@ export function Guestbook({ className }: SectionProps) {
 
   useEffect(() => {
     setLoading(true);
-    fetch("/api/wishes")
+    const slug = getCurrentSlug();
+    const query = slug ? `?slug=${encodeURIComponent(slug)}` : "";
+    fetch(`/api/wishes${query}`)
       .then((r) => r.json())
       .then((d) => setWishes(d.wishes ?? []))
       .catch(() => {})
@@ -39,6 +42,7 @@ export function Guestbook({ className }: SectionProps) {
     }
     setSubmitting(true);
     try {
+      const slug = getCurrentSlug();
       const res = await fetch("/api/wishes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -46,6 +50,7 @@ export function Guestbook({ className }: SectionProps) {
           name: name.trim(),
           message: message.trim(),
           invitedAs: guestName ?? undefined,
+          slug,
         }),
       });
       const data = await res.json();

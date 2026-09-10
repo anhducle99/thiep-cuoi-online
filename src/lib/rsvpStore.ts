@@ -1,9 +1,6 @@
 import path from "path";
 import type { RsvpRecord, RsvpStatus } from "@/types/wedding";
-import {
-  loadJsonStore,
-  saveJsonStore,
-} from "@/lib/jsonPersist";
+import { loadJsonStore, saveJsonStore } from "@/lib/jsonPersist";
 import { shortId } from "@/lib/utils";
 
 const BLOB_PATHNAME = "wedding-rsvp.json";
@@ -13,13 +10,31 @@ interface RsvpStoreFile {
   responses: RsvpRecord[];
 }
 
-export async function loadRsvpResponses(): Promise<RsvpRecord[]> {
-  const data = await loadJsonStore<RsvpStoreFile>(BLOB_PATHNAME, LOCAL_PATH);
+function getRsvpPaths(slug?: string) {
+  if (slug && slug !== "default") {
+    return {
+      blobKey: `weddings/${slug}/rsvp.json`,
+      localFile: path.join(process.cwd(), "data", "weddings", slug, "rsvp.json"),
+    };
+  }
+  return {
+    blobKey: BLOB_PATHNAME,
+    localFile: LOCAL_PATH,
+  };
+}
+
+export async function loadRsvpResponses(slug?: string): Promise<RsvpRecord[]> {
+  const { blobKey, localFile } = getRsvpPaths(slug);
+  const data = await loadJsonStore<RsvpStoreFile>(blobKey, localFile);
   return data?.responses ?? [];
 }
 
-export async function saveRsvpResponses(responses: RsvpRecord[]): Promise<void> {
-  await saveJsonStore(BLOB_PATHNAME, LOCAL_PATH, { responses });
+export async function saveRsvpResponses(
+  responses: RsvpRecord[],
+  slug?: string,
+): Promise<void> {
+  const { blobKey, localFile } = getRsvpPaths(slug);
+  await saveJsonStore(blobKey, localFile, { responses });
 }
 
 export function headcountForStatus(status: RsvpStatus): number {
@@ -57,15 +72,18 @@ export function findRsvpByGuestKey(
   return null;
 }
 
-export async function upsertRsvp(input: {
-  guestId?: string;
-  guestName: string;
-  status: RsvpStatus;
-}): Promise<RsvpRecord> {
+export async function upsertRsvp(
+  input: {
+    guestId?: string;
+    guestName: string;
+    status: RsvpStatus;
+  },
+  slug?: string,
+): Promise<RsvpRecord> {
   const name = input.guestName.replace(/\s+/g, " ").trim();
   if (!name) throw new Error("MISSING_NAME");
 
-  const responses = await loadRsvpResponses();
+  const responses = await loadRsvpResponses(slug);
   const now = new Date().toISOString();
   const existing = findRsvpByGuestKey(responses, input.guestId, name);
 
@@ -83,6 +101,6 @@ export async function upsertRsvp(input: {
     ? responses.map((r) => (r.id === existing.id ? record : r))
     : [record, ...responses];
 
-  await saveRsvpResponses(next);
+  await saveRsvpResponses(next, slug);
   return record;
 }

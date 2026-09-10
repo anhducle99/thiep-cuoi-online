@@ -15,6 +15,7 @@ export interface GuestRecord {
   id: string;
   name: string;
   order: number;
+  group?: string;
 }
 
 interface GuestStoreFile {
@@ -39,25 +40,45 @@ function sortGuests(guests: GuestRecord[]): GuestRecord[] {
   return [...guests].sort((a, b) => a.order - b.order);
 }
 
-export async function loadGuests(): Promise<GuestRecord[]> {
-  const data = await loadJsonStore<GuestStoreFile>(BLOB_PATHNAME, LOCAL_PATH);
+function getGuestPaths(slug?: string) {
+  if (slug && slug !== "default") {
+    return {
+      blobKey: `weddings/${slug}/guests.json`,
+      localFile: path.join(process.cwd(), "data", "weddings", slug, "guests.json"),
+    };
+  }
+  return {
+    blobKey: BLOB_PATHNAME,
+    localFile: LOCAL_PATH,
+  };
+}
 
-  if (data?.guests?.length) {
+export async function loadGuests(slug?: string): Promise<GuestRecord[]> {
+  const { blobKey, localFile } = getGuestPaths(slug);
+  const data = await loadJsonStore<GuestStoreFile>(blobKey, localFile);
+
+  if (data?.guests && Array.isArray(data.guests)) {
     return sortGuests(data.guests);
+  }
+
+  if (slug && slug !== "default") {
+    return [];
   }
 
   const seed = buildSeedGuests();
   try {
-    await saveJsonStore(BLOB_PATHNAME, LOCAL_PATH, { guests: seed });
-  } catch {
-    // Seed vẫn trả về để đọc; ghi sẽ báo lỗi khi admin thao tác
-  }
+    await saveJsonStore(blobKey, localFile, { guests: seed });
+  } catch {}
   return seed;
 }
 
-export async function saveGuests(guests: GuestRecord[]): Promise<"blob" | "file"> {
+export async function saveGuests(
+  guests: GuestRecord[],
+  slug?: string,
+): Promise<"blob" | "file"> {
+  const { blobKey, localFile } = getGuestPaths(slug);
   const sorted = sortGuests(guests);
-  return saveJsonStore(BLOB_PATHNAME, LOCAL_PATH, { guests: sorted });
+  return saveJsonStore(blobKey, localFile, { guests: sorted });
 }
 
 export function resolveGuestFromList(
@@ -71,6 +92,7 @@ export function resolveGuestFromList(
 export function nextGuestSlot(
   guests: GuestRecord[],
   name: string,
+  group?: string,
 ): GuestRecord {
   const normalized = normalizeName(name);
   const maxOrder = guests.reduce((max, g) => Math.max(max, g.order), 0);
@@ -81,16 +103,18 @@ export function nextGuestSlot(
     suffix += 1;
     id = buildGuestInviteId(normalized, suffix);
   }
-  return { id, name: normalized, order };
+  return { id, name: normalized, order, group };
 }
 
 export function guestsToInvites(
   guests: GuestRecord[],
   baseUrl: string,
+  slug?: string,
 ): Array<GuestRecord & { url: string; index: number }> {
+  const prefix = slug && slug !== "default" ? `${baseUrl.replace(/\/$/, "")}/${slug}` : baseUrl.replace(/\/$/, "");
   return sortGuests(guests).map((g, i) => ({
     ...g,
     index: i + 1,
-    url: `${baseUrl}/?id=${encodeURIComponent(g.id)}`,
+    url: `${prefix}/?id=${encodeURIComponent(g.id)}`,
   }));
 }

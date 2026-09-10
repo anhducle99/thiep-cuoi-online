@@ -8,7 +8,10 @@ export async function GET(request: Request) {
   const denied = requireAdmin(request);
   if (denied) return denied;
 
-  const responses = await loadRsvpResponses();
+  const url = new URL(request.url);
+  const slug = url.searchParams.get("slug") || undefined;
+
+  const responses = await loadRsvpResponses(slug);
   const sorted = [...responses].sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
   );

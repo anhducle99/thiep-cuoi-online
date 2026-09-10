@@ -25,7 +25,7 @@ interface GuestNameContextValue {
 
 const GuestNameContext = createContext<GuestNameContextValue | null>(null);
 
-async function resolveGuestFromUrl(): Promise<{
+async function resolveGuestFromUrl(slug?: string): Promise<{
   name: string | null;
   id: string | null;
 }> {
@@ -34,8 +34,9 @@ async function resolveGuestFromUrl(): Promise<{
   const idFromUrl = readGuestIdFromUrl();
   if (idFromUrl) {
     try {
+      const slugQuery = slug ? `&slug=${encodeURIComponent(slug)}` : "";
       const res = await fetch(
-        `/api/guests/resolve?id=${encodeURIComponent(idFromUrl)}`,
+        `/api/guests/resolve?id=${encodeURIComponent(idFromUrl)}${slugQuery}`,
         { cache: "no-store" },
       );
       if (res.ok) {
@@ -59,7 +60,13 @@ async function resolveGuestFromUrl(): Promise<{
   return { name: null, id: null };
 }
 
-export function GuestNameProvider({ children }: { children: React.ReactNode }) {
+export function GuestNameProvider({
+  children,
+  slug,
+}: {
+  children: React.ReactNode;
+  slug?: string;
+}) {
   const [guestName, setGuestNameState] = useState<string | null>(null);
   const [guestId, setGuestIdState] = useState<string | null>(null);
 
@@ -67,7 +74,7 @@ export function GuestNameProvider({ children }: { children: React.ReactNode }) {
     let cancelled = false;
 
     const init = async () => {
-      const fromUrl = await resolveGuestFromUrl();
+      const fromUrl = await resolveGuestFromUrl(slug);
       const fromStorageName = readGuestNameFromStorage();
       const fromStorageId = readGuestIdFromStorage();
 
@@ -90,7 +97,7 @@ export function GuestNameProvider({ children }: { children: React.ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [slug]);
 
   const setGuestName = useCallback((name: string) => {
     const trimmed = name.trim();

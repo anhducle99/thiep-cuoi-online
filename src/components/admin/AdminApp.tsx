@@ -5,7 +5,8 @@ import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { AdminRsvpList } from "@/components/admin/AdminRsvpList";
 import { AdminWeddingEditor } from "@/components/admin/AdminWeddingEditor";
-import { AdminShell, type AdminTab } from "@/components/admin/AdminShell";
+import { AdminShell, type AdminTab, type WeddingSummary } from "@/components/admin/AdminShell";
+import { CreateWeddingModal } from "@/components/admin/CreateWeddingModal";
 import {
   adminHeaders,
   clearStoredAdminKey,
@@ -27,14 +28,32 @@ export function AdminApp() {
   const [ready, setReady] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [tab, setTab] = useState<AdminTab>("wedding");
+  const [weddings, setWeddings] = useState<WeddingSummary[]>([]);
+  const [currentSlug, setCurrentSlug] = useState<string>("default");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [guests, setGuests] = useState<AdminGuestRow[]>([]);
   const [siteUrl, setSiteUrl] = useState("");
   const [storage, setStorage] = useState<StorageMode>("file");
   const [writable, setWritable] = useState(true);
   const [error, setError] = useState("");
 
-  const loadGuests = useCallback(async () => {
-    const res = await fetch("/api/admin/guests", {
+  const loadWeddings = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/weddings", {
+        headers: adminHeaders(),
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setWeddings(data.weddings || []);
+      }
+    } catch {}
+  }, []);
+
+  const loadGuests = useCallback(async (slugToLoad?: string) => {
+    const slug = slugToLoad !== undefined ? slugToLoad : currentSlug;
+    const param = slug && slug !== "default" ? `?slug=${encodeURIComponent(slug)}` : "";
+    const res = await fetch(`/api/admin/guests${param}`, {
       headers: adminHeaders(),
       cache: "no-store",
     });
@@ -55,17 +74,23 @@ export function AdminApp() {
     setAuthenticated(true);
     setError("");
     return true;
-  }, []);
+  }, [currentSlug]);
 
   useEffect(() => {
     const init = async () => {
       if (getStoredAdminKey()) {
-        await loadGuests();
+        await Promise.all([loadWeddings(), loadGuests("default")]);
       }
       setReady(true);
     };
     void init();
-  }, [loadGuests]);
+  }, [loadWeddings, loadGuests]);
+
+  useEffect(() => {
+    if (authenticated) {
+      void loadGuests(currentSlug);
+    }
+  }, [currentSlug, authenticated, loadGuests]);
 
   const handleLogin = async (password: string) => {
     const authRes = await fetch("/api/admin/auth", {
@@ -77,7 +102,8 @@ export function AdminApp() {
       return "Sai mật khẩu.";
     }
     setStoredAdminKey(password);
-    const ok = await loadGuests();
+    await loadWeddings();
+    const ok = await loadGuests("default");
     return ok ? null : "Không tải được danh sách khách.";
   };
 
@@ -85,6 +111,30 @@ export function AdminApp() {
     clearStoredAdminKey();
     setAuthenticated(false);
     setGuests([]);
+    setCurrentSlug("default");
+  };
+
+  const handleWeddingCreated = async (newSlug: string) => {
+    await loadWeddings();
+    setCurrentSlug(newSlug);
+  };
+
+  const handleDeleteWedding = async (slugToDelete: string) => {
+    try {
+      const res = await fetch(`/api/admin/weddings?slug=${encodeURIComponent(slugToDelete)}`, {
+        method: "DELETE",
+        headers: adminHeaders(),
+      });
+      if (res.ok) {
+        await loadWeddings();
+        setCurrentSlug("default");
+      } else {
+        const d = await res.json().catch(() => ({}));
+        alert(d.error || "Không thể xóa đám cưới.");
+      }
+    } catch {
+      alert("Lỗi kết nối khi xóa đám cưới.");
+    }
   };
 
   if (!ready) {
@@ -100,21 +150,40 @@ export function AdminApp() {
   }
 
   return (
-    <AdminShell tab={tab} onTabChange={setTab} onLogout={handleLogout}>
-      {tab === "wedding" ? (
-        <AdminWeddingEditor />
-      ) : tab === "guests" ? (
-        <AdminDashboard
-          guests={guests}
-          siteUrl={siteUrl}
-          storage={storage}
-          writable={writable}
-          error={error}
-          onReload={loadGuests}
-        />
-      ) : (
-        <AdminRsvpList />
-      )}
-    </AdminShell>
+    <>
+      <AdminShell
+        tab={tab}
+        onTabChange={setTab}
+        onLogout={handleLogout}
+        weddings={weddings}
+        currentSlug={currentSlug}
+        onSlugChange={setCurrentSlug}
+        onOpenCreateModal={() => setIsCreateModalOpen(true)}
+        onDeleteWedding={handleDeleteWedding}
+      >
+        {tab === "wedding" ? (
+          <AdminWeddingEditor key={currentSlug} slug={currentSlug} />
+        ) : tab === "guests" ? (
+          <AdminDashboard
+            key={currentSlug}
+            guests={guests}
+            siteUrl={siteUrl}
+            storage={storage}
+            writable={writable}
+            error={error}
+            slug={currentSlug}
+            onReload={() => loadGuests(currentSlug)}
+          />
+        ) : (
+          <AdminRsvpList key={currentSlug} slug={currentSlug} />
+        )}
+      </AdminShell>
+
+      <CreateWeddingModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreated={handleWeddingCreated}
+      />
+    </>
   );
 }

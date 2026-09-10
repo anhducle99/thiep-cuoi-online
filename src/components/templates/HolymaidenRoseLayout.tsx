@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 import type { WeddingData } from "@/types/wedding";
 import { useGuestName } from "@/components/GuestNameProvider";
 import { useMusicOptional } from "@/components/MusicProvider";
+import { getCurrentSlug } from "@/lib/currentSlug";
 
 function generateGoogleCalendarLink(event: {
   title: string;
@@ -1023,6 +1024,7 @@ function RSVPAndGiftRegistry({ data }: { data: WeddingData }) {
 
     setSubmitting(true);
     try {
+      const slug = getCurrentSlug();
       await fetch("/api/wishes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1030,6 +1032,7 @@ function RSVPAndGiftRegistry({ data }: { data: WeddingData }) {
           name: formData.name.trim(),
           message: formData.message.trim() || `Xác nhận tham dự: ${formData.attendance === "yes" ? "Sẽ đến" : "Không thể đến"} (${formData.guests} người)`,
           invitedAs: guestName ?? undefined,
+          slug,
         }),
       });
       setSubmitted(true);

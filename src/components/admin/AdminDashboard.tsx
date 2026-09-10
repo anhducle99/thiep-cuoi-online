@@ -11,6 +11,7 @@ interface AdminDashboardProps {
   storage: StorageMode;
   writable: boolean;
   error?: string;
+  slug?: string;
   onReload: () => Promise<boolean>;
 }
 
@@ -29,6 +30,7 @@ export function AdminDashboard({
   storage,
   writable,
   error,
+  slug,
   onReload,
 }: AdminDashboardProps) {
   const [query, setQuery] = useState("");
@@ -43,10 +45,13 @@ export function AdminDashboard({
 
   const getGuestUrl = (guest: AdminGuestRow) => {
     const base = siteUrl || "https://xuanphu.vercel.app";
+    const pathPrefix = slug && slug !== "default" ? `/${slug}` : "";
+    const params = new URLSearchParams();
+    params.set("id", guest.id);
     if (selectedTemplate && selectedTemplate !== "default") {
-      return `${base}/?id=${encodeURIComponent(guest.id)}&template=${encodeURIComponent(selectedTemplate)}`;
+      params.set("template", selectedTemplate);
     }
-    return `${base}/?id=${encodeURIComponent(guest.id)}`;
+    return `${base}${pathPrefix}?${params.toString()}`;
   };
 
   const filtered = useMemo(() => {
@@ -86,12 +91,11 @@ export function AdminDashboard({
     const res = await fetch("/api/admin/guests", {
       method: "POST",
       headers: adminHeaders(),
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, slug: slug !== "default" ? slug : undefined }),
     });
     const data = await res.json().catch(() => ({}));
     setBusy(false);
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
       notify(
         data.error ??
           `Lỗi ${res.status}: không thêm được khách. Kiểm tra Vercel Blob đã Connect chưa.`,
@@ -120,7 +124,7 @@ export function AdminDashboard({
     const res = await fetch(`/api/admin/guests/${encodeURIComponent(id)}`, {
       method: "PATCH",
       headers: adminHeaders(),
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, slug: slug !== "default" ? slug : undefined }),
     });
     const data = await res.json().catch(() => ({}));
     setBusy(false);
@@ -137,7 +141,8 @@ export function AdminDashboard({
     const ok = window.confirm(`Xóa khách "${guest.name}"? Link cũ sẽ không còn hoạt động.`);
     if (!ok) return;
     setBusy(true);
-    const res = await fetch(`/api/admin/guests/${encodeURIComponent(guest.id)}`, {
+    const param = slug && slug !== "default" ? `?slug=${encodeURIComponent(slug)}` : "";
+    const res = await fetch(`/api/admin/guests/${encodeURIComponent(guest.id)}${param}`, {
       method: "DELETE",
       headers: adminHeaders(),
     });

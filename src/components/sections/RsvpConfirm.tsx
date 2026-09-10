@@ -5,6 +5,7 @@ import { useGuestName } from "@/components/GuestNameProvider";
 import { Button } from "@/components/ui/Button";
 import type { RsvpRecord, RsvpStatus, SectionProps } from "@/types/wedding";
 import { cn } from "@/lib/utils";
+import { getCurrentSlug } from "@/lib/currentSlug";
 
 const STATUS_LABEL: Record<RsvpStatus, string> = {
   attending_1: "Tham dự (1 người)",
@@ -43,6 +44,8 @@ export function RsvpConfirm({ className }: SectionProps) {
     const params = new URLSearchParams();
     if (guestId) params.set("guestId", guestId);
     if (guestName) params.set("guestName", guestName);
+    const slug = getCurrentSlug();
+    if (slug) params.set("slug", slug);
 
     void fetch(`/api/rsvp?${params}`, { cache: "no-store" })
       .then((r) => r.json())
@@ -59,10 +62,11 @@ export function RsvpConfirm({ className }: SectionProps) {
     }
     setSubmitting(true);
     setError("");
+    const slug = getCurrentSlug();
     const res = await fetch("/api/rsvp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ guestId, guestName, status }),
+      body: JSON.stringify({ guestId, guestName, status, slug }),
     });
     const data = await res.json().catch(() => ({}));
     setSubmitting(false);

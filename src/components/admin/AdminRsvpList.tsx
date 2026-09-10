@@ -20,7 +20,7 @@ interface RsvpStats {
   headcount: number;
 }
 
-export function AdminRsvpList() {
+export function AdminRsvpList({ slug }: { slug?: string }) {
   const [rows, setRows] = useState<RsvpRow[]>([]);
   const [stats, setStats] = useState<RsvpStats | null>(null);
   const [query, setQuery] = useState("");
@@ -29,7 +29,8 @@ export function AdminRsvpList() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const res = await fetch("/api/admin/rsvp", {
+    const param = slug && slug !== "default" ? `?slug=${encodeURIComponent(slug)}` : "";
+    const res = await fetch(`/api/admin/rsvp${param}`, {
       headers: adminHeaders(),
       cache: "no-store",
     });
@@ -43,7 +44,7 @@ export function AdminRsvpList() {
     setStats(data.stats);
     setError("");
     setLoading(false);
-  }, []);
+  }, [slug]);
 
   useEffect(() => {
     void load();

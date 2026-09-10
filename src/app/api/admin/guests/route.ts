@@ -17,9 +17,12 @@ export async function GET(request: Request) {
     const denied = requireAdmin(request);
     if (denied) return denied;
 
-    const guests = await loadGuests();
+    const url = new URL(request.url);
+    const slug = url.searchParams.get("slug") || undefined;
+
+    const guests = await loadGuests(slug);
     const siteUrl = getSiteBaseUrl();
-    const invites = guestsToInvites(guests, siteUrl);
+    const invites = guestsToInvites(guests, siteUrl, slug);
     const storage = getStorageMode();
 
     return NextResponse.json({
@@ -41,10 +44,14 @@ export async function POST(request: Request) {
     const denied = requireAdmin(request);
     if (denied) return denied;
 
+    const url = new URL(request.url);
+    const slugFromQuery = url.searchParams.get("slug") || undefined;
+
     const body = (await request.json().catch(() => null)) as
-      | { name?: string }
+      | { name?: string; group?: string; slug?: string }
       | null;
 
+    const slug = body?.slug || slugFromQuery;
     const name = body?.name?.trim();
     if (!name) {
       return NextResponse.json(
@@ -53,7 +60,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const guests = await loadGuests();
+    const guests = await loadGuests(slug);
     const duplicate = guests.some(
       (g) => g.name.toLowerCase() === name.toLowerCase(),
     );
@@ -64,12 +71,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const record = nextGuestSlot(guests, name);
+    const record = nextGuestSlot(guests, name, body?.group);
     const next = [...guests, record];
-    await saveGuests(next);
+    await saveGuests(next, slug);
 
     const siteUrl = getSiteBaseUrl();
-    const [invite] = guestsToInvites([record], siteUrl);
+    const [invite] = guestsToInvites([record], siteUrl, slug);
 
     return NextResponse.json({ guest: invite }, { status: 201 });
   } catch (err) {

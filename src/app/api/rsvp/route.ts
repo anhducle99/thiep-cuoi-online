@@ -19,22 +19,25 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const guestId = searchParams.get("guestId") ?? undefined;
   const guestName = searchParams.get("guestName") ?? undefined;
+  const slug = searchParams.get("slug") ?? undefined;
 
   if (!guestId && !guestName) {
     return NextResponse.json({ error: "Thiếu thông tin khách." }, { status: 400 });
   }
 
-  const responses = await loadRsvpResponses();
+  const responses = await loadRsvpResponses(slug);
   const record = findRsvpByGuestKey(responses, guestId, guestName ?? undefined);
 
   return NextResponse.json({ rsvp: record });
 }
 
 export async function POST(request: Request) {
+  const { searchParams } = new URL(request.url);
   const body = (await request.json().catch(() => null)) as
-    | { guestId?: string; guestName?: string; status?: string }
+    | { guestId?: string; guestName?: string; status?: string; slug?: string }
     | null;
 
+  const slug = body?.slug || searchParams.get("slug") || undefined;
   const guestName = body?.guestName?.trim();
   const status = body?.status as RsvpStatus | undefined;
 
@@ -46,11 +49,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    const record = await upsertRsvp({
-      guestId: body?.guestId?.trim() || undefined,
-      guestName,
-      status,
-    });
+    const record = await upsertRsvp(
+      {
+        guestId: body?.guestId?.trim() || undefined,
+        guestName,
+        status,
+      },
+      slug,
+    );
     return NextResponse.json({ rsvp: record }, { status: 201 });
   } catch (err) {
     const { status, error } = toPersistErrorResponse(err);

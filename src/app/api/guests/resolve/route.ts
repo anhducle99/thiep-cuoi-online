@@ -6,12 +6,13 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
+  const slug = searchParams.get("slug") || undefined;
 
   if (!id) {
     return NextResponse.json({ error: "Thiếu id khách mời." }, { status: 400 });
   }
 
-  const guests = await loadGuests();
+  const guests = await loadGuests(slug);
   const guest = resolveGuestFromList(guests, id);
 
   if (!guest) {
