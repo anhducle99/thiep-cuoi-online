@@ -926,12 +926,17 @@ function FooterSection({ data }: { data: WeddingData }) {
         </p>
 
         <p className="font-serif text-2xl sm:text-3xl text-[#D4AF37] font-bold mt-2">
-          {data.groom.shortName} & {data.bride.shortName}
+          Xuân Phú
         </p>
 
         <p className="text-xs uppercase tracking-widest text-[#F7E7CE]/50">
-          #{data.groom.shortName}And{data.bride.shortName}2026 #ForeverStartsNow
+          #XUANPHU2026 #FOREVERSTARTSNOW
         </p>
+
+        <div className="mt-6 text-center text-xs text-[#F7E7CE]/60 font-normal">
+          Thiệp cưới online &amp; sự kiện -{" "}
+          <span className="text-[#D4AF37] font-semibold">Xuân Phú</span>
+        </div>
       </div>
     </footer>
   );

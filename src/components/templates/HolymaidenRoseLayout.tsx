@@ -1318,7 +1318,7 @@ function ClosingMessage({ data }: { data: WeddingData }) {
           </p>
           <p className="text-sm sm:text-base text-gray-500">With all our love,</p>
           <p className="font-serif text-2xl sm:text-4xl text-rose-600 font-bold mt-2">
-            {data.groom.shortName} & {data.bride.shortName}
+            Xuân Phú
           </p>
         </div>
 
@@ -1329,8 +1329,13 @@ function ClosingMessage({ data }: { data: WeddingData }) {
         </div>
 
         <p className="text-xs sm:text-sm text-gray-500 font-medium">
-          #{data.groom.shortName}And{data.bride.shortName}2026 #ForeverStartsNow #LoveWins
+          #XuanPhu2026 #ForeverStartsNow #LoveWins
         </p>
+
+        <div className="mt-8 text-center text-xs text-gray-500 font-normal">
+          Thiệp cưới online &amp; sự kiện -{" "}
+          <span className="text-rose-600 font-semibold">Xuân Phú</span>
+        </div>
       </div>
     </div>
   );

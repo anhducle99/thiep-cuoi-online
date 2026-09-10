@@ -1457,10 +1457,9 @@ function ClosingSection({ data }: { data: WeddingData }) {
         </div>
       </RevealOnScroll>
 
-      {/* Clean Footer below the photo card */}
       <div className="relative z-10 pb-12 pt-2 text-center text-xs text-stone-500 font-normal">
         Thiệp cưới online &amp; sự kiện -{" "}
-        <span className="text-[#d81b60] font-semibold">Miu Wedding</span>
+        <span className="text-[#d81b60] font-semibold">Xuân Phú</span>
       </div>
     </section>
   );

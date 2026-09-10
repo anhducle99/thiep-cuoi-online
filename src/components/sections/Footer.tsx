@@ -23,6 +23,10 @@ export function Footer({ data, className }: SectionProps) {
             {groom.shortName} &amp; {bride.shortName}
           </h1>
           <p className="mt-2 font-serif tracking-[0.3em] text-ink/60">Thân Mời</p>
+          <div className="mt-8 text-center text-xs text-stone-500 font-normal">
+            Thiệp cưới online &amp; sự kiện -{" "}
+            <span className="text-crimson font-semibold">Xuân Phú</span>
+          </div>
         </RevealOnScroll>
       </Container>
     </footer>
