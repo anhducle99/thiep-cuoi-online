@@ -16,7 +16,6 @@ export class PersistWriteError extends Error {
   }
 }
 
-/** Đang chạy trên Vercel (serverless, filesystem read-only). */
 export function isVercelRuntime(): boolean {
   return process.env.VERCEL === "1";
 }
@@ -25,7 +24,6 @@ function getBlobToken(): string | undefined {
   return process.env.BLOB_READ_WRITE_TOKEN;
 }
 
-/** Có thể ghi Blob. */
 export function hasBlobStorage(): boolean {
   return !!getBlobToken();
 }
@@ -103,7 +101,6 @@ function writeJsonToFile<T>(filePath: string, data: T): void {
   writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
 }
 
-/** Đọc JSON: ưu tiên Blob, sau đó file local (chỉ dev). */
 export async function loadJsonStore<T>(
   blobPathname: string,
   localPath: string,
@@ -113,7 +110,6 @@ export async function loadJsonStore<T>(
   return readJsonFromFile<T>(localPath);
 }
 
-/** Ghi JSON lên Blob (Vercel) hoặc file (local). */
 export async function saveJsonStore<T>(
   blobPathname: string,
   localPath: string,

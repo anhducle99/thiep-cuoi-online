@@ -1,0 +1,118 @@
+{
+  "welcomeText": "Welcome to our wedding",
+  "groom": {
+    "fullName": "Trần Văn Mẫn",
+    "shortName": "Văn Mẫn",
+    "title": "Chú rể",
+    "photo": "/images/Album/DSC01892.jpg"
+  },
+  "bride": {
+    "fullName": "Trần Hồng Ngân",
+    "shortName": "Hồng Ngân",
+    "title": "Cô dâu",
+    "photo": "/images/Album/DSC01892.jpg"
+  },
+  "groomParents": {
+    "prefix": "Ông Bà",
+    "father": "Trần Văn Minh",
+    "mother": "Nguyễn Thị Giàu",
+    "address": "Ấp Phước An, Phước Vinh, Châu Thành, Tây Ninh"
+  },
+  "brideParents": {
+    "prefix": "Ông Bà",
+    "father": "Trần Hồng Điệp",
+    "mother": "Nguyễn Thị Hà",
+    "address": "Ấp 6, xã Tân Thành, Tây Ninh"
+  },
+  "ceremony": {
+    "label": "Lễ Thành Hôn",
+    "venueName": "Tư Gia",
+    "address": "Ấp Phước An, Phước Vinh, Châu Thành, Tây Ninh",
+    "date": {
+      "iso": "2026-08-23T09:00:00+07:00",
+      "weekday": "Chủ Nhật",
+      "day": "23",
+      "month": "08",
+      "year": "2026",
+      "time": "09:00",
+      "lunar": "Tức ngày 11 tháng 07 năm Bính Ngọ"
+    },
+    "mapUrl": "https://www.google.com/maps"
+  },
+  "reception": {
+    "label": "Tiệc Cưới",
+    "venueName": "Tư Gia",
+    "address": "Ấp Phước An, Phước Vinh, Châu Thành, Tây Ninh",
+    "date": {
+      "iso": "2026-08-23T11:00:00+07:00",
+      "weekday": "Chủ Nhật",
+      "day": "23",
+      "month": "08",
+      "year": "2026",
+      "time": "11:00",
+      "lunar": "Tức ngày 11 tháng 07 năm Bính Ngọ"
+    },
+    "mapUrl": "https://www.google.com/maps"
+  },
+  "schedule": [
+    {
+      "time": "09:00",
+      "activity": "Lễ Thành Hôn"
+    },
+    {
+      "time": "11:00",
+      "activity": "Đón Khách & Khai Tiệc"
+    },
+    {
+      "time": "12:30",
+      "activity": "Chụp Hình Kỷ Niệm"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "/images/Album/DSC02077.jpg",
+      "alt": "Kỷ niệm 1"
+    },
+    {
+      "src": "/images/Album/DSC02095.jpg",
+      "alt": "Kỷ niệm 2"
+    },
+    {
+      "src": "/images/Album/DSC02256.jpg",
+      "alt": "Kỷ niệm 3"
+    },
+    {
+      "src": "/images/Album/DSC02345.jpg",
+      "alt": "Kỷ niệm 4"
+    },
+    {
+      "src": "/images/Album/DSC02380.jpg",
+      "alt": "Kỷ niệm 5"
+    },
+    {
+      "src": "/images/Album/DSC02415.jpg",
+      "alt": "Kỷ niệm 6"
+    }
+  ],
+  "giftAccounts": [
+    {
+      "owner": "Chú rể",
+      "bankName": "MB BANK",
+      "accountNumber": "0332 4071 98",
+      "accountHolder": "TRAN VAN MAN",
+      "qrImage": "/templates/olive/demo/qr-groom.webp"
+    },
+    {
+      "owner": "Cô dâu",
+      "bankName": "VIETCOMBANK",
+      "accountNumber": "9376 6658 88",
+      "accountHolder": "TRAN HONG NGAN",
+      "qrImage": "/templates/olive/demo/qr-bride.webp"
+    }
+  ],
+  "thankYouText": "Gia đình xin chân thành cảm ơn quý khách đã đến chung vui.",
+  "theme": {
+    "template": "song-hy-do",
+    "music": "/audio/wedding-song.mp3"
+  }
+}

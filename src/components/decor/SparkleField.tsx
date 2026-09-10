@@ -26,7 +26,6 @@ interface SparkleFieldProps {
   intense?: boolean;
 }
 
-/** Hạt sáng vàng kim lấp lánh trên nền cover */
 export function SparkleField({ className, intense = false }: SparkleFieldProps) {
   return (
     <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}>

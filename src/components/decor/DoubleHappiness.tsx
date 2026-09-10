@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 
-/** Ký tự Song Hỷ 囍 đơn lẻ */
 export function DoubleHappiness({ className }: { className?: string }) {
   return (
     <span
@@ -20,7 +19,6 @@ const BASE_DURATION = 14;
 const SIZES = ["text-xl", "text-2xl", "text-3xl", "text-4xl"] as const;
 const GLOWS = ["hy-glow-sm", "hy-glow-md", "hy-glow-lg"] as const;
 
-/** Luồng chữ Hỷ — delay trải đều, spawn dưới viewport */
 const STREAM_ITEMS = Array.from({ length: STREAM_COUNT }, (_, i) => {
   const duration = BASE_DURATION + (i % 4) * 1.5;
   return {
@@ -35,11 +33,10 @@ const STREAM_ITEMS = Array.from({ length: STREAM_COUNT }, (_, i) => {
 interface DoubleHappinessFieldProps {
   className?: string;
   active?: boolean;
-  /** Đang mở thiệp — ẩn toàn bộ luồng chữ ngay lập tức */
+
   isOpening?: boolean;
 }
 
-/** Nền chữ Hỷ vàng kim bay lên liên tục từ dưới màn hình (ẩn cho đến khi bay vào) */
 export function DoubleHappinessField({
   className,
   active = true,

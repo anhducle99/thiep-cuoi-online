@@ -1,6 +1,5 @@
 import type { WeddingDate } from "@/types/wedding";
 
-/** Sinh nội dung file .ics để thêm vào lịch */
 export function generateIcs(
   title: string,
   date: WeddingDate,
@@ -26,7 +25,6 @@ export function generateIcs(
     .join("\r\n");
 }
 
-/** Tải file .ics */
 export function downloadIcs(ics: string, filename: string) {
   const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
   const url = URL.createObjectURL(blob);
@@ -37,13 +35,11 @@ export function downloadIcs(ics: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
-/** Lấy số ngày trong tháng */
 export function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
 }
 
-/** Ngày đầu tuần của tháng (0=CN, 1=T2...) */
 export function getFirstDayOfMonth(year: number, month: number): number {
   const day = new Date(year, month - 1, 1).getDay();
-  return day === 0 ? 6 : day - 1; // T2=0 ... CN=6
+  return day === 0 ? 6 : day - 1;
 }

@@ -19,31 +19,45 @@ import { Guestbook } from "@/components/sections/Guestbook";
 import { GiftEnvelope } from "@/components/sections/GiftEnvelope";
 import { Footer } from "@/components/sections/Footer";
 import { cn } from "@/lib/utils";
+import { OliveWaxSealLayout } from "@/components/templates/OliveWaxSealLayout";
+import { OliveWaxSealCover } from "@/components/templates/OliveWaxSealCover";
+import { HolymaidenRoseLayout } from "@/components/templates/HolymaidenRoseLayout";
+import { AndikaGoldLayout } from "@/components/templates/AndikaGoldLayout";
+
+import { resolveThemeColors } from "@/lib/themePresets";
 
 type Phase = "loading" | "cover" | "opening" | "content";
 
 const LOADING_MS = 2400;
 const OPEN_REVEAL_MS = 900;
+const OLIVE_OPEN_REVEAL_MS = 3800;
 const COVER_UNMOUNT_MS = 1800;
 
-function InvitationViewInner({
+function StandardInvitationFlow({
   data,
+  themeStyles,
   onStartMusic,
 }: {
   data: WeddingData;
+  themeStyles: React.CSSProperties;
   onStartMusic: () => void;
 }) {
-  const [phase, setPhase] = useState<Phase>("loading");
+  const isOliveTemplate = data.theme.template === "olive-wax-seal";
+
+  const [phase, setPhase] = useState<Phase>(
+    isOliveTemplate ? "cover" : "loading",
+  );
   const [loadingExiting, setLoadingExiting] = useState(false);
 
   useEffect(() => {
+    if (isOliveTemplate) return;
     const exitTimer = setTimeout(() => setLoadingExiting(true), LOADING_MS - 600);
     const coverTimer = setTimeout(() => setPhase("cover"), LOADING_MS);
     return () => {
       clearTimeout(exitTimer);
       clearTimeout(coverTimer);
     };
-  }, []);
+  }, [isOliveTemplate]);
 
   useEffect(() => {
     const locked = phase !== "content";
@@ -55,7 +69,7 @@ function InvitationViewInner({
     };
   }, [phase]);
 
-  const [coverMounted, setCoverMounted] = useState(false);
+  const [coverMounted, setCoverMounted] = useState(isOliveTemplate);
 
   useEffect(() => {
     if (phase === "cover") setCoverMounted(true);
@@ -71,7 +85,10 @@ function InvitationViewInner({
     if (phase !== "cover") return;
     setPhase("opening");
     onStartMusic();
-    setTimeout(() => setPhase("content"), OPEN_REVEAL_MS);
+    setTimeout(
+      () => setPhase("content"),
+      isOliveTemplate ? OLIVE_OPEN_REVEAL_MS : OPEN_REVEAL_MS,
+    );
   };
 
   const isCoverExiting = phase === "opening" || phase === "content";
@@ -79,17 +96,25 @@ function InvitationViewInner({
   const musicLive = phase === "content" && (music?.playing ?? false);
 
   return (
-    <>
-      {phase === "loading" && (
+    <div className={`theme-${data.theme.template}`} style={themeStyles}>
+      {phase === "loading" && !isOliveTemplate && (
         <LoadingScreen data={data} exiting={loadingExiting} />
       )}
 
       {coverMounted && (
-        <CoverScreen
-          data={data}
-          onOpen={handleOpen}
-          isOpening={isCoverExiting}
-        />
+        data.theme.template === "olive-wax-seal" ? (
+          <OliveWaxSealCover
+            data={data}
+            onOpen={handleOpen}
+            isOpening={isCoverExiting}
+          />
+        ) : (
+          <CoverScreen
+            data={data}
+            onOpen={handleOpen}
+            isOpening={isCoverExiting}
+          />
+        )
       )}
 
       <MusicReactiveAmbience />
@@ -98,26 +123,95 @@ function InvitationViewInner({
         className={cn(
           "invitation-shell min-h-screen",
           musicLive && "invitation-shell--live",
-          phase === "content"
+          phase === "content" || (isOliveTemplate && phase === "opening")
             ? "animate-reveal-shell"
             : "invisible fixed inset-0 opacity-0",
         )}
-        aria-hidden={phase !== "content"}
+        aria-hidden={phase !== "content" && !(isOliveTemplate && phase === "opening")}
       >
-        <WelcomeHero data={data} />
-        <WeddingInfo data={data} />
-        <Gallery data={data} />
-        <ReceptionInfo data={data} />
-        <Countdown data={data} />
-        <Venue data={data} />
-        <Timeline data={data} />
-        <Guestbook data={data} />
-        <GiftEnvelope data={data} />
-        <Footer data={data} />
+        {data.theme.template === "olive-wax-seal" ? (
+          <OliveWaxSealLayout data={data} />
+        ) : (
+          <>
+            <WelcomeHero data={data} />
+            <WeddingInfo data={data} />
+            <Gallery data={data} />
+            <ReceptionInfo data={data} />
+            <Countdown data={data} />
+            <Venue data={data} />
+            <Timeline data={data} />
+            <Guestbook data={data} />
+            <GiftEnvelope data={data} />
+            <Footer data={data} />
+          </>
+        )}
       </main>
 
-      {phase === "content" && data.theme.music && <MusicToggle />}
-    </>
+      {phase === "content" && data.theme.music && !isOliveTemplate && (
+        <MusicToggle />
+      )}
+    </div>
+  );
+}
+
+function InvitationViewInner({
+  data,
+  onStartMusic,
+}: {
+  data: WeddingData;
+  onStartMusic: () => void;
+}) {
+  const isHolymaidenTemplate = data.theme.template === "holymaiden-rose";
+  const isAndikaTemplate = data.theme.template === "luxury-gold-black";
+
+  const colors = resolveThemeColors(data.theme.template, data.theme.colors);
+  const themeStyles = {
+    "--olive-primary": colors.primaryColor,
+    "--olive-secondary": colors.secondaryColor,
+    "--olive-bg": colors.backgroundColor,
+    "--olive-card": colors.cardColor,
+    "--olive-text": colors.textColor || colors.primaryColor,
+
+    "--andika-primary": colors.primaryColor,
+    "--andika-secondary": colors.secondaryColor,
+    "--andika-bg": colors.backgroundColor,
+    "--andika-card": colors.cardColor,
+    "--andika-text": colors.textColor || "#FFF8E7",
+
+    "--rose-primary": colors.primaryColor,
+    "--rose-secondary": colors.secondaryColor,
+    "--rose-bg": colors.backgroundColor,
+    "--rose-card": colors.cardColor,
+    "--rose-text": colors.textColor,
+
+    "--songhy-primary": colors.primaryColor,
+    "--songhy-secondary": colors.secondaryColor,
+    "--songhy-bg": colors.backgroundColor,
+    "--songhy-card": colors.cardColor,
+  } as React.CSSProperties;
+
+  if (isHolymaidenTemplate) {
+    return (
+      <div className={`theme-${data.theme.template}`} style={themeStyles}>
+        <HolymaidenRoseLayout data={data} onStartMusic={onStartMusic} />
+      </div>
+    );
+  }
+
+  if (isAndikaTemplate) {
+    return (
+      <div className={`theme-${data.theme.template}`} style={themeStyles}>
+        <AndikaGoldLayout data={data} onStartMusic={onStartMusic} />
+      </div>
+    );
+  }
+
+  return (
+    <StandardInvitationFlow
+      data={data}
+      themeStyles={themeStyles}
+      onStartMusic={onStartMusic}
+    />
   );
 }
 

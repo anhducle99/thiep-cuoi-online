@@ -11,7 +11,6 @@ const MAP_OPEN_URL =
 
 const HERO_PHOTO = "/images/Album/DSC01892.jpg";
 
-/** Album trượt — không gồm ảnh hero */
 const ALBUM_FILES = [
   "DSC02077.jpg",
   "DSC02095.jpg",

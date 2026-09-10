@@ -4,7 +4,6 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "solid" | "outline" | "ghost";
 };
 
-/** Nút bấm theo phong cách thiệp (đỏ rượu / viền vàng). */
 export function Button({
   variant = "solid",
   className,

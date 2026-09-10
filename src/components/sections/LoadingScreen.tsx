@@ -9,9 +9,15 @@ interface LoadingScreenProps {
   exiting?: boolean;
 }
 
-/** Màn hình chờ khi trang vừa tải — chuyển mượt sang cover */
 export function LoadingScreen({ data, exiting = false }: LoadingScreenProps) {
   const { groom, bride } = data;
+  const isSongHy = data.theme.template === "song-hy-do";
+  const emblem = {
+    "olive-wax-seal": "❧",
+    "holymaiden-rose": "💌",
+    "luxury-gold-black": "⚜",
+    "song-hy-do": "囍",
+  }[data.theme.template];
 
   return (
     <section
@@ -30,24 +36,24 @@ export function LoadingScreen({ data, exiting = false }: LoadingScreenProps) {
       >
         {/* Emblem xoay */}
         <div className="relative flex h-24 w-24 items-center justify-center sm:h-28 sm:w-28">
-          <Image
-            src="/images/themes/song-hy-red/sunburst.svg"
-            alt=""
-            width={112}
-            height={112}
-            className="absolute inset-0 animate-sunburst-spin opacity-80"
-            aria-hidden
-            priority
-          />
-          <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-cream-btn/90 shadow-lg animate-emblem-glow sm:h-[4.5rem] sm:w-[4.5rem]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/themes/song-hy-red/chu-hy.webp"
+          {isSongHy && (
+            <Image
+              src="/images/themes/song-hy-red/sunburst.svg"
               alt=""
-              width={40}
-              height={40}
-              className="object-contain"
+              width={112}
+              height={112}
+              className="absolute inset-0 animate-sunburst-spin opacity-80"
+              aria-hidden
+              priority
             />
+          )}
+          <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-cream-btn/90 shadow-lg animate-emblem-glow sm:h-[4.5rem] sm:w-[4.5rem]">
+            {isSongHy ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src="/images/themes/song-hy-red/chu-hy.webp" alt="" width={40} height={40} className="object-contain" />
+            ) : (
+              <span className="font-serif text-4xl text-wine">{emblem}</span>
+            )}
           </div>
         </div>
 

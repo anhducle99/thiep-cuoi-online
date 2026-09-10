@@ -1,4 +1,3 @@
-/** Đường kẻ trang trí với hoa văn ❦ ở giữa */
 export function OrnamentDivider({ className }: { className?: string }) {
   return (
     <div className={`my-4 flex items-center justify-center gap-3 ${className ?? ""}`}>

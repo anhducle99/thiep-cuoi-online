@@ -1,4 +1,3 @@
-/** Danh sách khách mời — chuẩn hóa, bỏ trùng */
 const RAW_GUESTS = [
   "Anh Lâm Tiên Sinh",
   "Chị Kim Thuỷ",

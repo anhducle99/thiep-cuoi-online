@@ -1,9 +1,5 @@
 import { cn } from "@/lib/utils";
 
-/**
- * Dải tiêu đề màu đỏ rượu vắt ngang trang (vd: "THÔNG TIN LỄ CƯỚI").
- * Đây là motif lặp lại của mẫu Song Hỷ Đỏ.
- */
 export function SectionBand({
   title,
   className,

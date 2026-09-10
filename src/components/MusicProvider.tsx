@@ -14,9 +14,9 @@ interface MusicContextValue {
   playing: boolean;
   ready: boolean;
   toggle: () => void;
-  /** Mức năng lượng nhạc 0–1 (dùng cho hiệu ứng trang) */
+
   energy: number;
-  /** Chiều cao 4 thanh sóng nhạc 0–1 */
+
   bars: number[];
 }
 
@@ -38,7 +38,7 @@ export function MusicProvider({
   const ctxRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const rafRef = useRef<number>(0);
-  const dataRef = useRef<Uint8Array | null>(null);
+  const dataRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
 
   const [playing, setPlaying] = useState(false);
   const [ready, setReady] = useState(false);

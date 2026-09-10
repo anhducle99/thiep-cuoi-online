@@ -1,4 +1,3 @@
-/** Gộp className có điều kiện (thay cho clsx để không cần thêm dependency). */
 export function cn(...classes: Array<string | false | null | undefined>): string {
   return classes.filter(Boolean).join(" ");
 }
@@ -8,11 +7,10 @@ export interface CountdownParts {
   hours: number;
   minutes: number;
   seconds: number;
-  /** true nếu thời điểm mục tiêu đã qua */
+
   isPast: boolean;
 }
 
-/** Tính khoảng thời gian còn lại tới mốc target (ISO string). */
 export function getCountdown(targetIso: string, now: Date = new Date()): CountdownParts {
   const target = new Date(targetIso).getTime();
   const diff = target - now.getTime();
@@ -29,7 +27,6 @@ export function getCountdown(targetIso: string, now: Date = new Date()): Countdo
   return { days, hours, minutes, seconds, isPast: false };
 }
 
-/** Sinh id ngẫu nhiên ngắn (dùng tạm cho wish khi chưa có backend). */
 export function shortId(): string {
   return Math.random().toString(36).slice(2, 10);
 }

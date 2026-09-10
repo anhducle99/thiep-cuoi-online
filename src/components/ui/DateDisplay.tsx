@@ -1,6 +1,5 @@
 import type { WeddingDate } from "@/types/wedding";
 
-/** Khối ngày kiểu THỨ HAI | 01 | THÁNG 06 + năm + lịch âm */
 export function DateDisplay({ date }: { date: WeddingDate }) {
   return (
     <div>

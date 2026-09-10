@@ -4,16 +4,9 @@ import {
   Alex_Brush,
   Libre_Baskerville,
   Be_Vietnam_Pro,
+  Lora,
+  Dancing_Script,
 } from "next/font/google";
-
-/**
- * Font mapping theo mẫu Song Hỷ Đỏ (chungdoi.com):
- * - Fz Qellia → Playfair Display (tên cô dâu/chú rể)
- * - Baskerville → Libre Baskerville (thứ, tháng, ÚT NAM/NỮ)
- * - Alex Brush → ký tự "&"
- * - EB Garamond → nội dung serif, tiêu đề section
- * - Be Vietnam Pro → UI / body
- */
 
 export const fontDisplay = Playfair_Display({
   subsets: ["latin", "vietnamese"],
@@ -50,10 +43,26 @@ export const fontSans = Be_Vietnam_Pro({
   display: "swap",
 });
 
+export const fontLora = Lora({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-lora",
+  display: "swap",
+});
+
+export const fontDancing = Dancing_Script({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "700"],
+  variable: "--font-dancing",
+  display: "swap",
+});
+
 export const fontVariables = [
   fontDisplay.variable,
   fontSerif.variable,
   fontClassic.variable,
   fontScript.variable,
   fontSans.variable,
+  fontLora.variable,
+  fontDancing.variable,
 ].join(" ");

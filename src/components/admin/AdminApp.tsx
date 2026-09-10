@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { AdminRsvpList } from "@/components/admin/AdminRsvpList";
+import { AdminWeddingEditor } from "@/components/admin/AdminWeddingEditor";
 import { AdminShell, type AdminTab } from "@/components/admin/AdminShell";
 import {
   adminHeaders,
@@ -25,7 +26,7 @@ export type StorageMode = "blob" | "file" | "readonly";
 export function AdminApp() {
   const [ready, setReady] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
-  const [tab, setTab] = useState<AdminTab>("guests");
+  const [tab, setTab] = useState<AdminTab>("wedding");
   const [guests, setGuests] = useState<AdminGuestRow[]>([]);
   const [siteUrl, setSiteUrl] = useState("");
   const [storage, setStorage] = useState<StorageMode>("file");
@@ -100,7 +101,9 @@ export function AdminApp() {
 
   return (
     <AdminShell tab={tab} onTabChange={setTab} onLogout={handleLogout}>
-      {tab === "guests" ? (
+      {tab === "wedding" ? (
+        <AdminWeddingEditor />
+      ) : tab === "guests" ? (
         <AdminDashboard
           guests={guests}
           siteUrl={siteUrl}

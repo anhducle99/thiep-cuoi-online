@@ -12,7 +12,7 @@ import { toPersistErrorResponse } from "@/lib/jsonPersist";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-type RouteContext = { params: { id: string } };
+type RouteContext = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: Request, { params }: RouteContext) {
   try {
@@ -31,8 +31,9 @@ export async function PATCH(request: Request, { params }: RouteContext) {
       );
     }
 
+    const { id } = await params;
     const guests = await loadGuests();
-    const target = resolveGuestFromList(guests, params.id);
+    const target = resolveGuestFromList(guests, id);
     if (!target) {
       return NextResponse.json({ error: "Không tìm thấy khách." }, { status: 404 });
     }
@@ -69,8 +70,9 @@ export async function DELETE(request: Request, { params }: RouteContext) {
     const denied = requireAdmin(request);
     if (denied) return denied;
 
+    const { id } = await params;
     const guests = await loadGuests();
-    const target = resolveGuestFromList(guests, params.id);
+    const target = resolveGuestFromList(guests, id);
     if (!target) {
       return NextResponse.json({ error: "Không tìm thấy khách." }, { status: 404 });
     }

@@ -22,6 +22,13 @@ export function CoverScreen({
   const { groom, bride, reception } = data;
   const { guestName } = useGuestName();
   const monthNum = parseInt(reception.date.month, 10);
+  const isSongHy = data.theme.template === "song-hy-do";
+  const emblem = {
+    "olive-wax-seal": "❧",
+    "holymaiden-rose": "💌",
+    "luxury-gold-black": "⚜",
+    "song-hy-do": "囍",
+  }[data.theme.template];
 
   return (
     <section
@@ -49,12 +56,10 @@ export function CoverScreen({
       >
         <div
           className={cn(
-            "relative overflow-hidden rounded-2xl px-4 pb-8 pt-14 text-center shadow-2xl sm:px-6 sm:pb-10 sm:pt-16",
+            "cover-card relative overflow-hidden rounded-2xl px-4 pb-8 pt-14 text-center shadow-2xl sm:px-6 sm:pb-10 sm:pt-16",
             !isOpening && "animate-pulse-glow",
           )}
-          style={{
-            background: "linear-gradient(160deg, #b00000 0%, #8b0000 50%, #6e0000 100%)",
-          }}
+          style={{ background: "var(--cover-card)" }}
         >
           <span
             aria-hidden
@@ -81,31 +86,30 @@ export function CoverScreen({
           />
 
           <div className="relative mx-auto mb-6 flex h-20 w-20 items-center justify-center sm:h-24 sm:w-24">
-            <Image
-              src="/images/themes/song-hy-red/sunburst.svg"
-              alt=""
-              width={96}
-              height={96}
-              className="absolute inset-0 opacity-90 animate-sunburst-spin"
-              aria-hidden
-              priority
-            />
-            <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-cream-btn shadow-lg animate-emblem-glow sm:h-16 sm:w-16">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/themes/song-hy-red/chu-hy.webp"
-                alt="Song Hỷ"
-                width={36}
-                height={36}
-                className="object-contain drop-shadow-[0_0_8px_rgba(201,162,75,0.6)]"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                  e.currentTarget.nextElementSibling?.classList.remove("hidden");
-                }}
+            {isSongHy && (
+              <Image
+                src="/images/themes/song-hy-red/sunburst.svg"
+                alt=""
+                width={96}
+                height={96}
+                className="absolute inset-0 opacity-90 animate-sunburst-spin"
+                aria-hidden
+                priority
               />
-              <span className="hidden font-serif text-2xl text-wine drop-shadow-[0_0_8px_rgba(201,162,75,0.6)]">
-                囍
-              </span>
+            )}
+            <div className="cover-emblem relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-cream-btn shadow-lg animate-emblem-glow sm:h-16 sm:w-16">
+              {isSongHy ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src="/images/themes/song-hy-red/chu-hy.webp"
+                  alt="Song Hỷ"
+                  width={36}
+                  height={36}
+                  className="object-contain"
+                />
+              ) : (
+                <span className="font-serif text-3xl text-wine">{emblem}</span>
+              )}
             </div>
           </div>
 

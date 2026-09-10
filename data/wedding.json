@@ -1,0 +1,136 @@
+{
+  "welcomeText": "Welcome to our wedding",
+  "groom": {
+    "fullName": "Nguyễn Hữu Thông",
+    "shortName": "Hữu Thông",
+    "title": "Chú rể",
+    "photo": "/templates/olive/demo/groom.webp"
+  },
+  "bride": {
+    "fullName": "Hoàng Thị Lâm Huyền",
+    "shortName": "Lâm Huyền",
+    "title": "Cô dâu",
+    "photo": "/templates/olive/demo/bride.webp"
+  },
+  "groomParents": {
+    "prefix": "Ông Bà",
+    "father": "Nguyễn Hữu Sỹ",
+    "mother": "Lê Thị Huệ",
+    "address": "Thành Vinh, Nghệ An"
+  },
+  "brideParents": {
+    "prefix": "Ông Bà",
+    "father": "Hoàng Văn Linh",
+    "mother": "Nguyễn Thị Thương",
+    "address": "Thành Vinh, Nghệ An"
+  },
+  "ceremony": {
+    "label": "Lễ Thành Hôn",
+    "venueName": "Khách Sạn Giao Tế\nTầng 2 Sảnh 6",
+    "address": "09 Hồ Tùng Mậu - P. Thành Vinh - Nghệ An",
+    "date": {
+      "iso": "2026-07-30T11:00:00+07:00",
+      "weekday": "Thứ Năm",
+      "day": "30",
+      "month": "07",
+      "year": "2026",
+      "time": "11:00",
+      "lunar": "Tức ngày 17 tháng 6 năm Bính Ngọ"
+    }
+  },
+  "reception": {
+    "label": "Lễ Thành Hôn",
+    "venueName": "Khách Sạn Giao Tế\nTầng 2 Sảnh 6",
+    "address": "09 Hồ Tùng Mậu - P. Thành Vinh - Nghệ An",
+    "date": {
+      "iso": "2026-07-30T11:00:00+07:00",
+      "weekday": "Thứ Năm",
+      "day": "30",
+      "month": "07",
+      "year": "2026",
+      "time": "11:00",
+      "lunar": "Tức ngày 17 tháng 6 năm Bính Ngọ"
+    },
+    "mapUrl": "https://maps.app.goo.gl/ArgoCDUNvRLyr3Uc7"
+  },
+  "schedule": [
+    {
+      "time": "10:30",
+      "activity": "Tiếp đón khách mời\nChụp ảnh lưu niệm",
+      "estimate": true
+    },
+    {
+      "time": "11:00",
+      "activity": "Lễ thành hôn",
+      "main": true
+    },
+    {
+      "time": "11:30",
+      "activity": "Khai tiệc mừng",
+      "main": true
+    }
+  ],
+  "gallery": [
+    {
+      "src": "/templates/olive/demo/g1.webp",
+      "alt": "Ảnh cưới 1"
+    },
+    {
+      "src": "/templates/olive/demo/g2.webp",
+      "alt": "Ảnh cưới 2"
+    },
+    {
+      "src": "/templates/olive/demo/g3.webp",
+      "alt": "Ảnh cưới 3"
+    },
+    {
+      "src": "/templates/olive/demo/g4.webp",
+      "alt": "Ảnh cưới 4"
+    },
+    {
+      "src": "/templates/olive/demo/g5.webp",
+      "alt": "Ảnh cưới 5"
+    },
+    {
+      "src": "/templates/olive/demo/g6.webp",
+      "alt": "Ảnh cưới 6"
+    },
+    {
+      "src": "/templates/olive/demo/g7.webp",
+      "alt": "Ảnh cưới 7"
+    },
+    {
+      "src": "/templates/olive/demo/g8.webp",
+      "alt": "Ảnh cưới 8"
+    }
+  ],
+  "giftAccounts": [
+    {
+      "owner": "Chú rể",
+      "bankName": "MB BANK",
+      "accountNumber": "0332 4071 98",
+      "accountHolder": "NGUYEN HUU THONG",
+      "qrImage": "/templates/olive/demo/qr-groom.webp"
+    },
+    {
+      "owner": "Cô dâu",
+      "bankName": "VIETCOMBANK",
+      "accountNumber": "9376 6658 88",
+      "accountHolder": "HOANG THI LAM HUYEN",
+      "qrImage": "/templates/olive/demo/qr-bride.webp"
+    }
+  ],
+  "thankYouText": "Gia đình xin chân thành cảm ơn quý khách đã đến chung vui.",
+  "theme": {
+    "template": "olive-wax-seal",
+    "music": "/templates/olive/audio.m4a",
+    "colors": {
+      "presetId": "olive-classic",
+      "primaryColor": "#4e6437",
+      "secondaryColor": "#27321c",
+      "backgroundColor": "#f8f8f4",
+      "cardColor": "#edf1ea",
+      "textColor": "#4e6437"
+    }
+  }
+}

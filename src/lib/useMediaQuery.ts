@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-/** Theo dõi media query — dùng cho responsive logic trong client components */
 export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
 

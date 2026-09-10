@@ -15,6 +15,12 @@ export function Gallery({ data, className }: SectionProps) {
   const isMobile = useIsMobile();
 
   const total = gallery.length;
+  const usesEditorialGrid = [
+    "editorial-hien-dai",
+    "boho-dat-nung",
+    "pastel-mau-nuoc",
+    "olive-wax-seal",
+  ].includes(data.theme.template);
   const prev = useCallback(
     () => setActive((i) => (i - 1 + total) % total),
     [total],
@@ -30,6 +36,37 @@ export function Gallery({ data, className }: SectionProps) {
   }, [next]);
 
   if (total === 0) return null;
+
+  if (usesEditorialGrid) {
+    return (
+      <section className={`section-cream overflow-hidden py-0 ${className ?? ""}`}>
+        <SectionBand title="Album ảnh cưới" />
+        <div className="gallery-editorial-grid grid grid-cols-2 gap-2 p-4 sm:gap-4 sm:p-8">
+          {gallery.map((img, index) => (
+            <RevealOnScroll
+              key={img.src}
+              variant="fade-up"
+              className={index % 3 === 0 ? "col-span-2" : ""}
+            >
+              <div
+                className={`gallery-editorial-item relative overflow-hidden ${
+                  index % 3 === 0 ? "aspect-[16/9]" : "aspect-[3/4]"
+                }`}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt ?? `Ảnh cưới ${index + 1}`}
+                  fill
+                  className="object-cover transition duration-700 hover:scale-105"
+                  sizes={index % 3 === 0 ? "(max-width: 640px) 100vw, 720px" : "(max-width: 640px) 50vw, 350px"}
+                />
+              </div>
+            </RevealOnScroll>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   const getOffset = (index: number) => {
     let diff = index - active;

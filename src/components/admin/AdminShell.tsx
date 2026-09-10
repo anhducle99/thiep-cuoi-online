@@ -1,6 +1,6 @@
 "use client";
 
-export type AdminTab = "guests" | "rsvp";
+export type AdminTab = "wedding" | "guests" | "rsvp";
 
 export function AdminShell({
   tab,
@@ -14,6 +14,7 @@ export function AdminShell({
   children: React.ReactNode;
 }) {
   const tabs: { id: AdminTab; label: string }[] = [
+    { id: "wedding", label: "Mẫu thiệp (9)" },
     { id: "guests", label: "Link khách mời" },
     { id: "rsvp", label: "Xác nhận tham dự" },
   ];

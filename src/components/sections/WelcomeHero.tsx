@@ -5,11 +5,16 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { useGuestName } from "@/components/GuestNameProvider";
 import type { SectionProps } from "@/types/wedding";
 
-/** Hero đầu trang — vòm đỏ, welcome, ảnh cung, tên hai bên (mẫu Song Hỷ Đỏ) */
 export function WelcomeHero({ data, className }: SectionProps) {
   const { groom, bride, welcomeText } = data;
   const { guestName } = useGuestName();
   const photo = groom.photo ?? bride.photo;
+  const emblem = {
+    "olive-wax-seal": "❧",
+    "holymaiden-rose": "💌",
+    "luxury-gold-black": "⚜",
+    "song-hy-do": "囍",
+  }[data.theme.template];
 
   return (
     <section className={`welcome-hero relative overflow-hidden bg-cream-light pb-10 pt-0 ${className ?? ""}`}>
@@ -33,7 +38,7 @@ export function WelcomeHero({ data, className }: SectionProps) {
 
         <RevealOnScroll variant="fade-scale" delay={80}>
           <p className="welcome-hero__hy mt-4 font-serif text-5xl text-cream-light sm:text-6xl">
-            囍
+            {emblem}
           </p>
         </RevealOnScroll>
 
@@ -48,7 +53,7 @@ export function WelcomeHero({ data, className }: SectionProps) {
                 {groom.shortName}
               </p>
             </div>
-            <span className="font-display pb-1 text-lg text-gold-light sm:text-xl">囍</span>
+            <span className="font-display pb-1 text-lg text-gold-light sm:text-xl">{emblem}</span>
             <div className="flex-1 text-left">
               <p className="font-classic text-[0.6rem] uppercase tracking-[0.25em] text-cream-light/80 sm:text-[0.65rem]">
                 {bride.title}

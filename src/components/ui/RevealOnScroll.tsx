@@ -18,7 +18,6 @@ const VARIANT_CLASS: Record<RevealVariant, { hidden: string; show: string }> = {
   "blur-up": { hidden: "reveal-blur-hidden", show: "reveal-blur-show" },
 };
 
-/** Hiệu ứng xuất hiện khi cuộn tới — nhiều kiểu animation */
 export function RevealOnScroll({
   children,
   className,

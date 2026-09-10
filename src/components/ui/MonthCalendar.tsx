@@ -22,7 +22,6 @@ function HeartDay({ day }: { day: number }) {
   );
 }
 
-/** Lịch tháng — ngày cưới đánh dấu trái tim đỏ (mẫu chungdoi) */
 export function MonthCalendar({
   year,
   month,

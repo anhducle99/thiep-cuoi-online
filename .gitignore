@@ -42,5 +42,8 @@ opencode.json
 # Reference material đã tải về từ trang mẫu (không commit)
 /reference/
 "M?u Thi?p Song H? D? - Thi?p Cu?i Truy?n Th?ng Ch? H?.html"
+miu_*.html
+miu_styles.css
+nodes_summary.json
 
 .vercel
