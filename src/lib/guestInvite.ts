@@ -18,19 +18,22 @@ export function buildGuestInviteId(name: string, index: number): string {
   return `${slugifyGuestName(name)}-${index}`;
 }
 
-const PRODUCTION_SITE_URL = "https://thiep-cuoi-online-beige.vercel.app";
+const PRODUCTION_SITE_URL = "https://xuanphu.vercel.app";
 
 export function getSiteBaseUrl(): string {
+  if (typeof window !== "undefined" && window.location.origin) {
+    return window.location.origin;
+  }
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
   }
-  if (process.env.NODE_ENV === "production") {
-    return PRODUCTION_SITE_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   }
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  return "http://localhost:3000";
+  return PRODUCTION_SITE_URL;
 }
 
 export function buildInviteUrl(baseUrl: string, id: string): string {
