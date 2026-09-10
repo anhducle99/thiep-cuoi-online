@@ -282,11 +282,13 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-serif text-xl font-bold text-crimson">
-            {slug && slug !== "default" ? `Nội dung thiệp cưới: /${slug}` : "Quản lý mẫu thiệp & nội dung"}
+            {slug && slug !== "default"
+              ? `Chỉnh sửa thiệp: ${data?.groom?.fullName || ""} & ${data?.bride?.fullName || ""}`
+              : "Quản lý mẫu thiệp & nội dung"}
           </h2>
           <p className="text-xs text-ink/60">
             {slug && slug !== "default"
-              ? "Tùy biến thông tin cặp đôi, ngày giờ hôn lễ, tài khoản mừng và ảnh cưới cho đám cưới này."
+              ? `Đường dẫn thiệp: xuanphu.vercel.app/${slug} · Mẫu đang chọn: ${currentTplMeta?.name}`
               : "Mỗi mẫu thiệp lưu một bộ dữ liệu, hình ảnh và mã QR riêng biệt, không bị trùng hay đè lên nhau."}
           </p>
         </div>
@@ -296,7 +298,7 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
           rel="noreferrer"
           className="rounded-lg border border-wine/30 bg-white px-3 py-1.5 text-xs font-semibold text-crimson hover:bg-cream-light transition shadow-sm inline-flex items-center gap-1"
         >
-          <span>Xem thử mẫu đang chọn</span>
+          <span>Xem thử thiệp</span>
           <span className="text-[10px]">↗</span>
         </a>
       </div>
@@ -305,10 +307,14 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
       <section className="mb-6 rounded-2xl border border-gold/30 bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <span className="text-xs font-bold uppercase tracking-wider text-wine">
-            Chọn mẫu thiệp bạn muốn chỉnh sửa:
+            {slug && slug !== "default" ? "Chọn mẫu giao diện cho đám cưới này:" : "Chọn mẫu thiệp bạn muốn chỉnh sửa:"}
           </span>
           <span className="text-xs text-ink/60">
-            Mẫu trang chủ hiện tại: <strong className="text-emerald-700">{templates.find(t => t.id === activeTemplate)?.name}</strong>
+            {slug && slug !== "default" ? (
+              <>Mẫu đang áp dụng: <strong className="text-wine font-semibold">{currentTplMeta?.name}</strong></>
+            ) : (
+              <>Mẫu trang chủ hiện tại: <strong className="text-emerald-700">{templates.find(t => t.id === activeTemplate)?.name}</strong></>
+            )}
           </span>
         </div>
 

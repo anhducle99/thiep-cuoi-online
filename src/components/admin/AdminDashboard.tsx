@@ -160,13 +160,15 @@ export function AdminDashboard({
     <div className="mx-auto max-w-4xl">
       <header className="mb-6">
         <h2 className="font-serif text-xl font-semibold text-crimson">
-          Link mời khách
+          {slug && slug !== "default" ? `Link mời khách: /${slug}` : "Link mời khách"}
         </h2>
         <p className="mt-1 text-sm text-ink/60">
-          Thêm · Sửa · Xóa · Copy link mời từng khách
+          {slug && slug !== "default"
+            ? "Tạo link mời riêng cho từng khách của đám cưới này (tự động gắn tên khách vào thiệp)"
+            : "Thêm · Sửa · Xóa · Copy link mời từng khách"}
         </p>
         <p className="mt-2 text-xs text-ink/45">
-          {siteUrl} · {guests.length} khách · lưu trữ: {storage}
+          {siteUrl}{slug && slug !== "default" ? `/${slug}` : ""} · {guests.length} khách · lưu trữ: {storage}
         </p>
         {!writable && (
           <div className="mt-3 rounded-lg border border-amber-500/50 bg-amber-50 px-3 py-2.5 text-left text-xs leading-relaxed text-amber-950">
