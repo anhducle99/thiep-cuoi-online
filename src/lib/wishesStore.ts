@@ -55,3 +55,4 @@ export async function addWish(
   await saveWishes(next, slug);
   return wish;
 }
+

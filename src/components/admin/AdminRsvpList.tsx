@@ -79,7 +79,7 @@ export function AdminRsvpList({ slug }: { slug?: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-4xl">
       {error && <p className="mb-4 text-sm text-red-700">{error}</p>}
 
       {stats && (

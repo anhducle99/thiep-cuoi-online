@@ -36,10 +36,10 @@ export function AdminShell({
   onDeleteWedding,
   children,
 }: AdminShellProps) {
-  const tabs: { id: AdminTab; label: string }[] = [
-    { id: "wedding", label: "Mẫu thiệp & Nội dung" },
-    { id: "guests", label: "Link khách mời" },
-    { id: "rsvp", label: "Xác nhận tham dự" },
+  const tabs: { id: AdminTab; label: string; icon: string }[] = [
+    { id: "wedding", label: "Mẫu thiệp & Nội dung", icon: "🎨" },
+    { id: "guests", label: "Link khách mời", icon: "👥" },
+    { id: "rsvp", label: "Xác nhận tham dự", icon: "💌" },
   ];
 
   const currentWedding = weddings.find((w) => w.slug === currentSlug);
@@ -49,7 +49,7 @@ export function AdminShell({
   const handleDelete = () => {
     if (isDefault) return;
     const ok = window.confirm(
-      `Bạn có chắc muốn xóa đám cưới "/${currentSlug}" (${currentWedding?.title || currentSlug})?\nDữ liệu khách mời và cấu hình của cặp đôi này sẽ bị gỡ bỏ.`,
+      `Bạn có chắc muốn xóa đám cưới "/${currentSlug}" (${currentWedding?.title || currentSlug})?\nDữ liệu khách mời và cấu hình của cặp đôi này sẽ bị xóa.`,
     );
     if (ok && onDeleteWedding) {
       onDeleteWedding(currentSlug);
@@ -58,22 +58,23 @@ export function AdminShell({
 
   return (
     <div className="min-h-screen bg-[#e8dfd0]">
-      <header className="sticky top-0 z-30 border-b border-gold/25 bg-cream-light/95 backdrop-blur-sm shadow-sm">
-        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <h1 className="font-serif text-lg font-bold text-crimson">
-              Admin Thiệp Cưới
-            </h1>
-            <span className="hidden text-xs text-gold/60 sm:inline">|</span>
-            <div className="flex items-center gap-2">
-              <label htmlFor="wedding-select" className="text-xs font-medium text-ink/70">
+      <header className="sticky top-0 z-30 border-b border-gold/25 bg-cream-light/95 backdrop-blur-md shadow-sm">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-2.5">
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="flex items-center gap-1.5 font-serif text-base sm:text-lg font-bold text-crimson tracking-tight shrink-0">
+              <span>💍</span>
+              <span>Admin Thiệp Cưới</span>
+            </div>
+
+            <div className="flex items-center gap-1.5 rounded-lg border border-gold/30 bg-white/80 px-2 py-1 shadow-inner">
+              <span className="text-[11px] font-semibold text-ink/60 uppercase tracking-wide hidden md:inline">
                 Đám cưới:
-              </label>
+              </span>
               <select
                 id="wedding-select"
                 value={currentSlug}
                 onChange={(e) => onSlugChange(e.target.value)}
-                className="rounded-lg border border-gold/40 bg-white px-2.5 py-1.5 text-xs font-semibold text-ink shadow-sm outline-none focus:border-wine focus:ring-1 focus:ring-wine"
+                className="bg-transparent text-xs font-semibold text-wine outline-none cursor-pointer max-w-[160px] sm:max-w-[240px] truncate"
               >
                 <option value="default">⭐ Mặc định (Trang chủ /)</option>
                 {weddings.map((w) => (
@@ -82,82 +83,83 @@ export function AdminShell({
                   </option>
                 ))}
               </select>
+
+              {!isDefault && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  title="Xóa đám cưới này"
+                  className="rounded p-1 text-ink/40 hover:bg-red-50 hover:text-red-600 transition-colors"
+                >
+                  <span className="text-xs">🗑️</span>
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={onOpenCreateModal}
-              className="rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-emerald-800 transition-colors"
+              className="inline-flex items-center gap-1 rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-emerald-800 transition-colors"
             >
-              + Tạo đám cưới mới
+              <span>+</span>
+              <span className="hidden sm:inline">Tạo đám cưới mới</span>
+              <span className="sm:hidden">Tạo mới</span>
             </button>
+
+            <Link
+              href={viewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 rounded-lg border border-gold/40 bg-white px-2.5 py-1.5 text-xs font-medium text-wine shadow-sm hover:bg-cream-light transition-colors"
+              title="Mở xem trang thiệp của đám cưới đang chọn"
+            >
+              <span>👁️</span>
+              <span className="hidden sm:inline">Xem thiệp</span>
+              <span className="text-[10px] text-ink/40">↗</span>
+            </Link>
+
             <button
               type="button"
               onClick={onLogout}
-              className="shrink-0 rounded-lg border border-ink/20 px-3 py-1.5 text-xs text-ink/60 hover:bg-white/50 transition-colors"
+              className="rounded-lg border border-ink/15 px-2.5 py-1.5 text-xs text-ink/60 hover:bg-white/80 hover:text-ink transition-colors"
             >
               Đăng xuất
             </button>
           </div>
         </div>
 
-        <div className="border-t border-gold/15 bg-amber-50/60 px-4 py-2">
-          <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-2 text-xs">
-            <div className="flex items-center gap-2 text-ink/80">
-              <span className="font-medium">Đang quản lý:</span>
-              <span className="font-bold text-wine">
-                {isDefault
-                  ? "Đám cưới Mặc định (Trang chủ)"
-                  : `${currentWedding?.groomName || "Chú rể"} & ${currentWedding?.brideName || "Cô dâu"}`}
-              </span>
-              <span className="rounded bg-wine/10 px-1.5 py-0.5 font-mono text-[11px] text-wine">
-                {isDefault ? "/" : `/${currentSlug}`}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <Link
-                href={viewUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 font-medium text-wine hover:underline"
-              >
-                <span>👁️ Mở xem thiệp</span>
-                <span className="text-[10px]">↗</span>
-              </Link>
-
-              {!isDefault && (
+        <div className="border-t border-gold/15 bg-white/40">
+          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-1.5">
+            <nav className="flex items-center gap-1 sm:gap-2">
+              {tabs.map((t) => (
                 <button
+                  key={t.id}
                   type="button"
-                  onClick={handleDelete}
-                  className="font-medium text-red-600 hover:text-red-800 hover:underline"
+                  onClick={() => onTabChange(t.id)}
+                  className={
+                    tab === t.id
+                      ? "inline-flex items-center gap-1.5 rounded-full bg-wine px-3.5 py-1.5 text-xs font-semibold text-cream-light shadow-sm transition-all"
+                      : "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-ink/70 hover:bg-white/60 hover:text-ink transition-all"
+                  }
                 >
-                  🗑️ Xóa đám cưới này
+                  <span>{t.icon}</span>
+                  <span>{t.label}</span>
                 </button>
-              )}
+              ))}
+            </nav>
+
+            <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-ink/50">
+              <span>Đường dẫn:</span>
+              <code className="font-mono text-wine font-semibold bg-white/70 px-1.5 py-0.5 rounded border border-gold/20">
+                /{isDefault ? "" : currentSlug}
+              </code>
             </div>
           </div>
         </div>
-
-        <nav className="mx-auto flex max-w-4xl gap-1 px-4 py-2.5">
-          {tabs.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => onTabChange(t.id)}
-              className={
-                tab === t.id
-                  ? "rounded-full bg-wine px-4 py-1.5 text-xs font-medium text-cream-light shadow-sm"
-                  : "rounded-full px-4 py-1.5 text-xs text-ink/70 hover:bg-white/50 transition-colors"
-              }
-            >
-              {t.label}
-            </button>
-          ))}
-        </nav>
       </header>
+
       <main className="px-4 py-6">{children}</main>
     </div>
   );

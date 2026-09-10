@@ -157,7 +157,7 @@ export function AdminDashboard({
   };
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-4xl">
       <header className="mb-6">
         <h2 className="font-serif text-xl font-semibold text-crimson">
           Link mời khách

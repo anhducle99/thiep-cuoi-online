@@ -279,35 +279,26 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
 
   return (
     <div className="mx-auto max-w-4xl pb-16">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-serif text-2xl font-bold text-crimson">
-            {slug && slug !== "default" ? `Chỉnh sửa nội dung thiệp: /${slug}` : "Quản lý các Mẫu Thiệp Độc Lập"}
+          <h2 className="font-serif text-xl font-bold text-crimson">
+            {slug && slug !== "default" ? `Nội dung thiệp cưới: /${slug}` : "Quản lý mẫu thiệp & nội dung"}
           </h2>
-          <p className="mt-1 text-sm text-ink/60">
+          <p className="text-xs text-ink/60">
             {slug && slug !== "default"
               ? "Tùy biến thông tin cặp đôi, ngày giờ hôn lễ, tài khoản mừng và ảnh cưới cho đám cưới này."
               : "Mỗi mẫu thiệp lưu một bộ dữ liệu, hình ảnh và mã QR riêng biệt, không bị trùng hay đè lên nhau."}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <a
-            href={slug && slug !== "default" ? `/${slug}?template=${selectedTemplate}` : `/?template=${selectedTemplate}`}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-xl border border-wine/30 bg-white px-4 py-2.5 text-sm font-semibold text-crimson hover:bg-cream-light transition shadow-sm"
-          >
-            Xem thử mẫu đang chọn ↗
-          </a>
-          <a
-            href={slug && slug !== "default" ? `/${slug}` : "/"}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-xl bg-wine px-4 py-2.5 text-sm font-semibold text-cream-light hover:bg-wine-dark transition shadow"
-          >
-            {slug && slug !== "default" ? "Xem Trang Thiệp Này ↗" : "Xem Trang Chủ ↗"}
-          </a>
-        </div>
+        <a
+          href={slug && slug !== "default" ? `/${slug}?template=${selectedTemplate}` : `/?template=${selectedTemplate}`}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-lg border border-wine/30 bg-white px-3 py-1.5 text-xs font-semibold text-crimson hover:bg-cream-light transition shadow-sm inline-flex items-center gap-1"
+        >
+          <span>Xem thử mẫu đang chọn</span>
+          <span className="text-[10px]">↗</span>
+        </a>
       </div>
 
       {/* Selector: Chọn mẫu muốn chỉnh sửa */}

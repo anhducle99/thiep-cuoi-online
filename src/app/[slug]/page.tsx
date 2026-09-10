@@ -55,3 +55,4 @@ export default async function WeddingSlugPage({
   const weddingData = await loadWeddingData(validTemplate, slug);
   return <InvitationView data={weddingData} slug={slug} />;
 }
+
