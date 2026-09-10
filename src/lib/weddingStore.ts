@@ -7,27 +7,33 @@ import { loadJsonStore, saveJsonStore } from "@/lib/jsonPersist";
 const BLOB_PATHNAME = "wedding-content.json";
 const LOCAL_PATH = path.join(process.cwd(), "data", "wedding.json");
 const TEMPLATES_DIR = path.join(process.cwd(), "data", "templates");
+const ACTIVE_TEMPLATE_BLOB_PATHNAME = "active-template.json";
 const ACTIVE_TEMPLATE_PATH = path.join(process.cwd(), "data", "active-template.json");
 
 export async function getActiveTemplate(): Promise<ThemeConfig["template"]> {
   try {
-    const raw = await fs.readFile(ACTIVE_TEMPLATE_PATH, "utf8");
-    const parsed = JSON.parse(raw);
-    return parsed.activeTemplate || "olive-wax-seal";
+    const saved = await loadJsonStore<{ activeTemplate?: ThemeConfig["template"] }>(
+      ACTIVE_TEMPLATE_BLOB_PATHNAME,
+      ACTIVE_TEMPLATE_PATH,
+    );
+    if (saved?.activeTemplate) {
+      return saved.activeTemplate;
+    }
   } catch {
-    return "olive-wax-seal";
+    // Ignore error
   }
+  return "olive-wax-seal";
 }
 
 export async function setActiveTemplate(templateId: ThemeConfig["template"]): Promise<void> {
   try {
-    await fs.writeFile(
+    await saveJsonStore(
+      ACTIVE_TEMPLATE_BLOB_PATHNAME,
       ACTIVE_TEMPLATE_PATH,
-      JSON.stringify({ activeTemplate: templateId }, null, 2),
-      "utf8",
+      { activeTemplate: templateId },
     );
-  } catch {
-    // Ignore error
+  } catch (err) {
+    console.error("Failed to persist active template:", err);
   }
 }
 

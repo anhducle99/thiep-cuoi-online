@@ -39,6 +39,16 @@ export function AdminDashboard({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("default");
+
+  const getGuestUrl = (guest: AdminGuestRow) => {
+    const base = siteUrl || "https://xuanphu.vercel.app";
+    if (selectedTemplate && selectedTemplate !== "default") {
+      return `${base}/?id=${encodeURIComponent(guest.id)}&template=${encodeURIComponent(selectedTemplate)}`;
+    }
+    return `${base}/?id=${encodeURIComponent(guest.id)}`;
+  };
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return guests;
@@ -54,7 +64,7 @@ export function AdminDashboard({
   };
 
   const handleCopy = async (guest: AdminGuestRow) => {
-    const ok = await copyText(guest.url);
+    const ok = await copyText(getGuestUrl(guest));
     if (ok) {
       setCopiedId(guest.id);
       setTimeout(() => setCopiedId(null), 2000);
@@ -62,7 +72,7 @@ export function AdminDashboard({
   };
 
   const handleCopyAll = async () => {
-    const text = filtered.map((g) => `${g.name}\t${g.url}`).join("\n");
+    const text = filtered.map((g) => `${g.name}\t${getGuestUrl(g)}`).join("\n");
     await copyText(text);
     setCopiedId("__all__");
     setTimeout(() => setCopiedId(null), 2000);
@@ -192,6 +202,31 @@ export function AdminDashboard({
           </button>
         </form>
 
+        {/* Bộ chọn mẫu thiệp áp dụng cho link */}
+        <div className="mb-4 rounded-xl border border-gold/30 bg-amber-50/70 p-3.5 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-wine block">
+                🎨 Áp dụng mẫu thiệp cho link khách:
+              </label>
+              <p className="text-[11px] text-ink/60 mt-0.5">
+                Khi copy link, khách sẽ tự động mở đúng mẫu thiệp bạn chọn bên dưới.
+              </p>
+            </div>
+            <select
+              value={selectedTemplate}
+              onChange={(e) => setSelectedTemplate(e.target.value)}
+              className="rounded-lg border border-gold/40 bg-white px-3 py-2 text-xs sm:text-sm font-medium text-ink outline-none focus:border-wine shadow-sm"
+            >
+              <option value="default">⭐ Mẫu mặc định (Theo Trang chủ)</option>
+              <option value="olive-wax-seal">🌿 Mẫu 1: Olive Wax Seal (Sáp niêm)</option>
+              <option value="holymaiden-rose">🌸 Mẫu 2: Holymaiden Rose (Hoa hồng)</option>
+              <option value="luxury-gold-black">⚜️ Mẫu 3: Luxury Gold Black (Hoàng gia)</option>
+              <option value="song-hy-do">🏮 Mẫu 4: Song Hỷ Đỏ (Truyền thống)</option>
+            </select>
+          </div>
+        </div>
+
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
           <input
             type="search"
@@ -250,9 +285,14 @@ export function AdminDashboard({
                       ) : (
                         <p className="font-serif text-sm text-ink">{guest.name}</p>
                       )}
-                      <code className="mt-1 block break-all text-xs text-ink/55">
-                        {guest.url}
-                      </code>
+                      <a
+                        href={getGuestUrl(guest)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-1 block break-all text-xs text-ink/60 hover:text-wine hover:underline"
+                      >
+                        {getGuestUrl(guest)} ↗
+                      </a>
                     </div>
 
                     <div className="flex flex-wrap gap-2 sm:justify-end">
