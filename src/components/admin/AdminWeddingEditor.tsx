@@ -38,18 +38,26 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
   const [editingUrlValue, setEditingUrlValue] = useState("");
   const galleryFileInputRef = useRef<HTMLInputElement>(null);
 
-  const loadTemplateData = useCallback(async (tplId: ThemeConfig["template"]) => {
+  const loadTemplateData = useCallback(async (tplId?: ThemeConfig["template"]) => {
     setLoading(true);
     setMessage("");
     try {
-      const slugParam = slug && slug !== "default" ? `&slug=${encodeURIComponent(slug)}` : "";
-      const res = await fetch(`/api/admin/wedding?template=${tplId}${slugParam}`, {
+      const isCustomSlug = slug && slug !== "default";
+      const slugParam = isCustomSlug ? `slug=${encodeURIComponent(slug)}` : "";
+      const tplParam = tplId ? `template=${tplId}` : "";
+      const query = [tplParam, slugParam].filter(Boolean).join("&");
+      const res = await fetch(`/api/admin/wedding${query ? `?${query}` : ""}`, {
         headers: adminHeaders(),
         cache: "no-store",
       });
       const result = await res.json();
       if (res.ok && result.wedding) {
         setData(result.wedding);
+        if (result.wedding?.theme?.template) {
+          setSelectedTemplate(result.wedding.theme.template);
+        } else if (tplId) {
+          setSelectedTemplate(tplId);
+        }
         if (result.activeTemplate) {
           setActiveTemplate(result.activeTemplate);
         }
@@ -64,8 +72,17 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
   }, [slug]);
 
   useEffect(() => {
-    void loadTemplateData(selectedTemplate);
-  }, [selectedTemplate, loadTemplateData]);
+    void loadTemplateData(slug && slug !== "default" ? undefined : selectedTemplate);
+  }, [loadTemplateData, slug]);
+
+  const handleTemplateChange = (tplId: ThemeConfig["template"]) => {
+    setSelectedTemplate(tplId);
+    if (slug && slug !== "default") {
+      setData((prev) => (prev ? { ...prev, theme: { ...prev.theme, template: tplId } } : prev));
+    } else {
+      void loadTemplateData(tplId);
+    }
+  };
 
   const handleUpload = async (file: File, onDone: (url: string) => void, fieldKey: string) => {
     setUploadingField(fieldKey);
@@ -247,7 +264,13 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
         method: "PUT",
         headers: adminHeaders(),
         body: JSON.stringify({
-          wedding: data,
+          wedding: {
+            ...data,
+            theme: {
+              ...data.theme,
+              template: selectedTemplate,
+            },
+          },
           templateId: selectedTemplate,
           setAsActive: slug && slug !== "default" ? false : selectedTemplate === activeTemplate,
           slug: slug !== "default" ? slug : undefined,
@@ -326,7 +349,7 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
               <button
                 key={template.id}
                 type="button"
-                onClick={() => setSelectedTemplate(template.id)}
+                onClick={() => handleTemplateChange(template.id)}
                 className={`relative overflow-hidden rounded-xl border-2 text-left transition-all p-3 ${
                   isSelected
                     ? "border-wine bg-amber-50/50 shadow-md ring-2 ring-wine/30"

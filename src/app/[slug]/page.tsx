@@ -44,6 +44,10 @@ export default async function WeddingSlugPage({
   if (isReservedSlug(slug)) {
     notFound();
   }
+  const meta = await getWeddingMeta(slug);
+  if (!meta) {
+    notFound();
+  }
 
   const requestedTemplate = (await searchParams).template;
   const validTemplate = TEMPLATE_IDS.includes(

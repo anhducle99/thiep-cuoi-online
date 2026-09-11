@@ -114,8 +114,14 @@ export function AdminApp() {
     setCurrentSlug("default");
   };
 
+  const handleSlugChange = (newSlug: string) => {
+    setGuests([]);
+    setCurrentSlug(newSlug);
+  };
+
   const handleWeddingCreated = async (newSlug: string) => {
     await loadWeddings();
+    setGuests([]);
     setCurrentSlug(newSlug);
   };
 
@@ -127,6 +133,7 @@ export function AdminApp() {
       });
       if (res.ok) {
         await loadWeddings();
+        setGuests([]);
         setCurrentSlug("default");
       } else {
         const d = await res.json().catch(() => ({}));
@@ -157,7 +164,7 @@ export function AdminApp() {
         onLogout={handleLogout}
         weddings={weddings}
         currentSlug={currentSlug}
-        onSlugChange={setCurrentSlug}
+        onSlugChange={handleSlugChange}
         onOpenCreateModal={() => setIsCreateModalOpen(true)}
         onDeleteWedding={handleDeleteWedding}
       >
