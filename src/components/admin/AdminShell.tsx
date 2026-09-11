@@ -60,41 +60,9 @@ export function AdminShell({
     <div className="min-h-screen bg-[#e8dfd0]">
       <header className="sticky top-0 z-30 border-b border-gold/25 bg-cream-light/95 backdrop-blur-md shadow-sm">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-2.5">
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
-            <div className="flex items-center gap-1.5 font-serif text-base sm:text-lg font-bold text-crimson tracking-tight shrink-0">
-              <span>💍</span>
-              <span>Admin Thiệp Cưới</span>
-            </div>
-
-            <div className="flex items-center gap-1.5 rounded-lg border border-gold/30 bg-white/80 px-2 py-1 shadow-inner">
-              <span className="text-[11px] font-semibold text-ink/60 uppercase tracking-wide hidden md:inline">
-                Đám cưới:
-              </span>
-              <select
-                id="wedding-select"
-                value={currentSlug}
-                onChange={(e) => onSlugChange(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-wine outline-none cursor-pointer max-w-[160px] sm:max-w-[240px] truncate"
-              >
-                <option value="default">⭐ Mặc định (Trang chủ /)</option>
-                {weddings.map((w) => (
-                  <option key={w.slug} value={w.slug}>
-                    💑 {w.groomName} & {w.brideName} (/{w.slug})
-                  </option>
-                ))}
-              </select>
-
-              {!isDefault && (
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  title="Xóa đám cưới này"
-                  className="rounded p-1 text-ink/40 hover:bg-red-50 hover:text-red-600 transition-colors"
-                >
-                  <span className="text-xs">🗑️</span>
-                </button>
-              )}
-            </div>
+          <div className="flex items-center gap-1.5 font-serif text-base sm:text-lg font-bold text-crimson tracking-tight shrink-0">
+            <span>💍</span>
+            <span>Admin Thiệp Cưới</span>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
@@ -130,8 +98,8 @@ export function AdminShell({
           </div>
         </div>
 
-        <div className="border-t border-gold/15 bg-white/40">
-          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-1.5">
+        <div className="border-t border-gold/15 bg-white/50">
+          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2.5 px-4 py-2">
             <nav className="flex items-center gap-1 sm:gap-2">
               {tabs.map((t) => (
                 <button
@@ -141,7 +109,7 @@ export function AdminShell({
                   className={
                     tab === t.id
                       ? "inline-flex items-center gap-1.5 rounded-full bg-wine px-3.5 py-1.5 text-xs font-semibold text-cream-light shadow-sm transition-all"
-                      : "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-ink/70 hover:bg-white/60 hover:text-ink transition-all"
+                      : "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-ink/70 hover:bg-white/70 hover:text-ink transition-all"
                   }
                 >
                   <span>{t.icon}</span>
@@ -150,11 +118,36 @@ export function AdminShell({
               ))}
             </nav>
 
-            <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-ink/50">
-              <span>Đường dẫn:</span>
-              <code className="font-mono text-wine font-semibold bg-white/70 px-1.5 py-0.5 rounded border border-gold/20">
-                /{isDefault ? "" : currentSlug}
-              </code>
+            <div className="flex items-center gap-1.5 rounded-lg border border-gold/40 bg-white px-2.5 py-1 shadow-sm">
+              <span className="text-[11px] font-bold text-wine uppercase tracking-wider">
+                Đám cưới:
+              </span>
+              <select
+                id="wedding-select"
+                value={currentSlug}
+                onChange={(e) => onSlugChange(e.target.value)}
+                className="bg-transparent text-xs font-semibold text-ink outline-none cursor-pointer max-w-[200px] sm:max-w-[280px] truncate"
+              >
+                <option value="default">⭐ Mặc định (Trang chủ /)</option>
+                {weddings
+                  .filter((w) => w.slug !== "default")
+                  .map((w) => (
+                    <option key={w.slug} value={w.slug}>
+                      💑 {w.groomName} & {w.brideName} (/{w.slug})
+                    </option>
+                  ))}
+              </select>
+
+              {!isDefault && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  title="Xóa đám cưới này"
+                  className="rounded p-1 text-ink/40 hover:bg-red-50 hover:text-red-600 transition-colors"
+                >
+                  <span className="text-xs">🗑️</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
