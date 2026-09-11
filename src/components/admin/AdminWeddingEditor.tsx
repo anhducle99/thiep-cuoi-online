@@ -302,28 +302,17 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
 
   return (
     <div className="mx-auto max-w-4xl pb-16">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="font-serif text-xl font-bold text-crimson">
-            {slug && slug !== "default"
-              ? `Chỉnh sửa thiệp: ${data?.groom?.fullName || ""} & ${data?.bride?.fullName || ""}`
-              : "Quản lý mẫu thiệp & nội dung"}
-          </h2>
-          <p className="text-xs text-ink/60">
-            {slug && slug !== "default"
-              ? `Đường dẫn thiệp: xuanphu.vercel.app/${slug} · Mẫu đang chọn: ${currentTplMeta?.name}`
-              : "Mỗi mẫu thiệp lưu một bộ dữ liệu, hình ảnh và mã QR riêng biệt, không bị trùng hay đè lên nhau."}
-          </p>
-        </div>
-        <a
-          href={slug && slug !== "default" ? `/${slug}?template=${selectedTemplate}` : `/?template=${selectedTemplate}`}
-          target="_blank"
-          rel="noreferrer"
-          className="rounded-lg border border-wine/30 bg-white px-3 py-1.5 text-xs font-semibold text-crimson hover:bg-cream-light transition shadow-sm inline-flex items-center gap-1"
-        >
-          <span>Xem thử thiệp</span>
-          <span className="text-[10px]">↗</span>
-        </a>
+      <div className="mb-4">
+        <h2 className="font-serif text-xl font-bold text-crimson">
+          {slug && slug !== "default"
+            ? `Chỉnh sửa thiệp: ${data?.groom?.fullName || ""} & ${data?.bride?.fullName || ""}`
+            : "Quản lý mẫu thiệp & nội dung"}
+        </h2>
+        <p className="text-xs text-ink/60 mt-0.5">
+          {slug && slug !== "default"
+            ? `Đường dẫn thiệp: xuanphu.vercel.app/${slug} · Mẫu đang chọn: ${currentTplMeta?.name}`
+            : "Mỗi mẫu thiệp lưu một bộ dữ liệu, hình ảnh và mã QR riêng biệt, không bị trùng hay đè lên nhau."}
+        </p>
       </div>
 
       {/* Selector: Chọn mẫu muốn chỉnh sửa */}
