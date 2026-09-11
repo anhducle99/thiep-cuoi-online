@@ -190,25 +190,14 @@ export function AdminDashboard({
           className="mb-4 flex flex-col gap-2 rounded-xl border border-gold/25 bg-cream-light p-4 sm:flex-row sm:items-end"
         >
           <div className="min-w-0 flex-1">
-            <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-medium uppercase tracking-wide text-ink/50">
-                Thêm khách mới
-              </label>
-              <button
-                type="button"
-                onClick={() => setIsImportModalOpen(true)}
-                disabled={busy || !writable}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-800 hover:text-emerald-900 bg-emerald-100 hover:bg-emerald-200 px-2.5 py-1 rounded-lg border border-emerald-300 shadow-sm transition cursor-pointer"
-              >
-                <span>📊</span>
-                <span>Nhập từ Excel</span>
-              </button>
-            </div>
+            <label className="text-xs font-medium uppercase tracking-wide text-ink/50">
+              Thêm khách mới
+            </label>
             <input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Vd: Anh Hiếu Nguyễn"
-              className="w-full rounded-lg border border-gold/40 bg-white/70 px-3 py-2.5 text-sm outline-none focus:border-wine"
+              className="mt-1 w-full rounded-lg border border-gold/40 bg-white/70 px-3 py-2.5 text-sm outline-none focus:border-wine"
               disabled={busy}
             />
           </div>
