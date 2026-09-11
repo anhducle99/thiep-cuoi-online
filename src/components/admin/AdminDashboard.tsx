@@ -41,17 +41,10 @@ export function AdminDashboard({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
-  const [selectedTemplate, setSelectedTemplate] = useState<string>("default");
-
   const getGuestUrl = (guest: AdminGuestRow) => {
     const base = siteUrl || "https://xuanphu.vercel.app";
     const pathPrefix = slug && slug !== "default" ? `/${slug}` : "";
-    const params = new URLSearchParams();
-    params.set("id", guest.id);
-    if (selectedTemplate && selectedTemplate !== "default") {
-      params.set("template", selectedTemplate);
-    }
-    return `${base}${pathPrefix}?${params.toString()}`;
+    return `${base}${pathPrefix}?id=${encodeURIComponent(guest.id)}`;
   };
 
   const filtered = useMemo(() => {
@@ -208,31 +201,6 @@ export function AdminDashboard({
             Thêm
           </button>
         </form>
-
-        {/* Bộ chọn mẫu thiệp áp dụng cho link */}
-        <div className="mb-4 rounded-xl border border-gold/30 bg-amber-50/70 p-3.5 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
-            <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-wine block">
-                🎨 Áp dụng mẫu thiệp cho link khách:
-              </label>
-              <p className="text-[11px] text-ink/60 mt-0.5">
-                Khi copy link, khách sẽ tự động mở đúng mẫu thiệp bạn chọn bên dưới.
-              </p>
-            </div>
-            <select
-              value={selectedTemplate}
-              onChange={(e) => setSelectedTemplate(e.target.value)}
-              className="rounded-lg border border-gold/40 bg-white px-3 py-2 text-xs sm:text-sm font-medium text-ink outline-none focus:border-wine shadow-sm"
-            >
-              <option value="default">⭐ Mẫu mặc định (Theo Trang chủ)</option>
-              <option value="olive-wax-seal">🌿 Mẫu 1: Olive Wax Seal (Sáp niêm)</option>
-              <option value="holymaiden-rose">🌸 Mẫu 2: Holymaiden Rose (Hoa hồng)</option>
-              <option value="luxury-gold-black">⚜️ Mẫu 3: Luxury Gold Black (Hoàng gia)</option>
-              <option value="song-hy-do">🏮 Mẫu 4: Song Hỷ Đỏ (Truyền thống)</option>
-            </select>
-          </div>
-        </div>
 
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
           <input
