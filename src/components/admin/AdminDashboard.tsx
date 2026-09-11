@@ -5,6 +5,7 @@ import type { AdminGuestRow, StorageMode } from "@/components/admin/AdminApp";
 import { BLOB_SETUP_MESSAGE } from "@/lib/persistMessages";
 import { adminHeaders } from "@/lib/adminClient";
 import { ConfirmModal } from "./ConfirmModal";
+import { ImportExcelModal } from "./ImportExcelModal";
 
 interface AdminDashboardProps {
   guests: AdminGuestRow[];
@@ -42,6 +43,7 @@ export function AdminDashboard({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [guestToDelete, setGuestToDelete] = useState<AdminGuestRow | null>(null);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   const getGuestUrl = (guest: AdminGuestRow) => {
     const base = siteUrl || "https://xuanphu.vercel.app";
@@ -188,21 +190,32 @@ export function AdminDashboard({
           className="mb-4 flex flex-col gap-2 rounded-xl border border-gold/25 bg-cream-light p-4 sm:flex-row sm:items-end"
         >
           <div className="min-w-0 flex-1">
-            <label className="text-xs font-medium uppercase tracking-wide text-ink/50">
-              Thêm khách mới
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-medium uppercase tracking-wide text-ink/50">
+                Thêm khách mới
+              </label>
+              <button
+                type="button"
+                onClick={() => setIsImportModalOpen(true)}
+                disabled={busy || !writable}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-800 hover:text-emerald-900 bg-emerald-100 hover:bg-emerald-200 px-2.5 py-1 rounded-lg border border-emerald-300 shadow-sm transition cursor-pointer"
+              >
+                <span>📊</span>
+                <span>Nhập từ Excel</span>
+              </button>
+            </div>
             <input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Vd: Anh Hiếu Nguyễn"
-              className="mt-1 w-full rounded-lg border border-gold/40 bg-white/70 px-3 py-2.5 text-sm outline-none focus:border-wine"
+              className="w-full rounded-lg border border-gold/40 bg-white/70 px-3 py-2.5 text-sm outline-none focus:border-wine"
               disabled={busy}
             />
           </div>
           <button
             type="submit"
             disabled={busy || !newName.trim() || !writable}
-            className="rounded-lg bg-wine px-5 py-2.5 text-sm text-cream-light disabled:opacity-50"
+            className="rounded-lg bg-wine px-5 py-2.5 text-sm text-cream-light disabled:opacity-50 cursor-pointer"
           >
             Thêm
           </button>
@@ -216,6 +229,15 @@ export function AdminDashboard({
             placeholder="Tìm tên hoặc id…"
             className="min-w-0 flex-1 rounded-lg border border-gold/40 bg-cream-light px-3 py-2.5 text-sm outline-none focus:border-wine"
           />
+          <button
+            type="button"
+            onClick={() => setIsImportModalOpen(true)}
+            disabled={busy || !writable}
+            className="shrink-0 rounded-lg border border-emerald-600/30 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100 flex items-center gap-1.5 cursor-pointer shadow-sm"
+          >
+            <span>📊</span>
+            <span>Nhập từ Excel</span>
+          </button>
           <button
             type="button"
             onClick={handleCopyAll}
@@ -321,6 +343,17 @@ export function AdminDashboard({
         busy={busy}
         onConfirm={() => void executeDeleteGuest()}
         onCancel={() => setGuestToDelete(null)}
+      />
+
+      <ImportExcelModal
+        isOpen={isImportModalOpen}
+        slug={slug}
+        existingNames={guests.map((g) => g.name)}
+        onClose={() => setIsImportModalOpen(false)}
+        onSuccess={async (count) => {
+          notify(`Đã nhập thành công ${count} khách mời vào danh sách!`);
+          await onReload();
+        }}
       />
     </div>
   );

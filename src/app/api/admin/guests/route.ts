@@ -5,6 +5,7 @@ import {
   loadGuests,
   nextGuestSlot,
   saveGuests,
+  batchAddGuests,
 } from "@/lib/guestStore";
 import { getSiteBaseUrl } from "@/lib/guestInvite";
 import { getStorageMode, toPersistErrorResponse } from "@/lib/jsonPersist";
@@ -48,10 +49,46 @@ export async function POST(request: Request) {
     const slugFromQuery = url.searchParams.get("slug") || undefined;
 
     const body = (await request.json().catch(() => null)) as
-      | { name?: string; group?: string; slug?: string }
+      | { name?: string; names?: string[]; group?: string; slug?: string }
       | null;
 
     const slug = body?.slug || slugFromQuery;
+
+    if (Array.isArray(body?.names)) {
+      const validNames = body.names
+        .map((n) => (typeof n === "string" ? n.replace(/\s+/g, " ").trim() : ""))
+        .filter((n) => n.length > 0);
+
+      if (validNames.length === 0) {
+        return NextResponse.json(
+          { error: "Danh sách tên khách rỗng." },
+          { status: 400 },
+        );
+      }
+
+      const guests = await loadGuests(slug);
+      const { nextGuests, added, duplicates } = batchAddGuests(guests, validNames);
+
+      if (added.length > 0) {
+        await saveGuests(nextGuests, slug);
+      }
+
+      const siteUrl = getSiteBaseUrl();
+      const invites = guestsToInvites(added, siteUrl, slug);
+
+      return NextResponse.json(
+        {
+          success: true,
+          addedCount: added.length,
+          duplicateCount: duplicates.length,
+          duplicates,
+          guests: invites,
+          total: nextGuests.length,
+        },
+        { status: 201 },
+      );
+    }
+
     const name = body?.name?.trim();
     if (!name) {
       return NextResponse.json(

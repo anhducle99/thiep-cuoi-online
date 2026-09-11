@@ -118,3 +118,27 @@ export function guestsToInvites(
     url: `${prefix}/?id=${encodeURIComponent(g.id)}`,
   }));
 }
+
+export function batchAddGuests(
+  guests: GuestRecord[],
+  names: string[],
+): { nextGuests: GuestRecord[]; added: GuestRecord[]; duplicates: string[] } {
+  let list = [...guests];
+  const added: GuestRecord[] = [];
+  const duplicates: string[] = [];
+
+  for (const rawName of names) {
+    const trimmed = rawName.replace(/\s+/g, " ").trim();
+    if (!trimmed) continue;
+    const exists = list.some((g) => g.name.toLowerCase() === trimmed.toLowerCase());
+    if (exists) {
+      duplicates.push(trimmed);
+      continue;
+    }
+    const record = nextGuestSlot(list, trimmed);
+    list = [...list, record];
+    added.push(record);
+  }
+
+  return { nextGuests: list, added, duplicates };
+}
