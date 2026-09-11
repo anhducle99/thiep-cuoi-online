@@ -1,0 +1,24 @@
+{
+  "guests": [
+    {
+      "id": "ong-ba-bay-1",
+      "name": "Ông Bà Bảy",
+      "order": 1
+    },
+    {
+      "id": "anh-long-2",
+      "name": "Anh Long & Gia đình",
+      "order": 2
+    },
+    {
+      "id": "ban-mai-3",
+      "name": "Bạn Mai",
+      "order": 3
+    },
+    {
+      "id": "em-phuong-4",
+      "name": "Em Phương",
+      "order": 4
+    }
+  ]
+}

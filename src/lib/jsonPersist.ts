@@ -51,7 +51,7 @@ async function readJsonFromBlob<T>(pathname: string): Promise<T | null> {
   try {
     const { get } = await loadBlobModule();
     const result = await get(pathname, {
-      access: "private",
+      access: "public",
       token,
       useCache: false,
     });
@@ -72,7 +72,7 @@ async function writeJsonToBlob<T>(pathname: string, data: T): Promise<void> {
   try {
     const { put } = await loadBlobModule();
     await put(pathname, JSON.stringify(data, null, 2), {
-      access: "private",
+      access: "public",
       allowOverwrite: true,
       addRandomSuffix: false,
       contentType: "application/json",

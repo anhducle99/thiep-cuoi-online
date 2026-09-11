@@ -1,0 +1,122 @@
+{
+  "welcomeText": "Our Wedding Celebration",
+  "groom": {
+    "fullName": "Đặng Quang Hùng",
+    "shortName": "Quang Hùng",
+    "title": "Chú rể",
+    "photo": "/templates/holymaiden/images/groom-circle.png",
+    "fatherName": "Đặng Văn Nam",
+    "motherName": "Nguyễn Thị Hương"
+  },
+  "bride": {
+    "fullName": "Lê Tuyết Mai",
+    "shortName": "Tuyết Mai",
+    "title": "Cô dâu",
+    "photo": "/templates/holymaiden/images/bride-circle.png",
+    "fatherName": "Lê Quốc Toàn",
+    "motherName": "Hoàng Kim Yến"
+  },
+  "groomParents": {
+    "prefix": "Ông Bà",
+    "father": "M. Anwar",
+    "mother": "Hj. Rosdiana",
+    "address": "Bone, Sulawesi Selatan"
+  },
+  "brideParents": {
+    "prefix": "Ông Bà",
+    "father": "Akiyama Hiroshi",
+    "mother": "Akiyama Keiko",
+    "address": "Kyoto, Japan"
+  },
+  "ceremony": {
+    "label": "Lễ Thành Hôn",
+    "venueName": "Masjid Songkok Recca Bone",
+    "address": "Jl. Jend. Ahmad Yani, Bone",
+    "date": {
+      "iso": "2026-10-15T16:00:00+07:00",
+      "weekday": "Thứ Năm",
+      "day": "15",
+      "month": "10",
+      "year": "2026",
+      "time": "16:00",
+      "lunar": "Tức ngày 25 tháng 08 năm Bính Ngọ"
+    },
+    "mapUrl": "https://maps.google.com/?q=Hotel+Novena+Bone"
+  },
+  "reception": {
+    "label": "Tiệc Cưới",
+    "venueName": "Hotel Novena Bone",
+    "address": "Jl. Jend. Ahmad Yani No.25, Bone",
+    "date": {
+      "iso": "2026-10-15T18:30:00+07:00",
+      "weekday": "Thứ Năm",
+      "day": "15",
+      "month": "10",
+      "year": "2026",
+      "time": "18:30",
+      "lunar": "Tức ngày 25 tháng 08 năm Bính Ngọ"
+    },
+    "mapUrl": "https://maps.google.com/?q=Hotel+Novena+Bone"
+  },
+  "schedule": [
+    {
+      "time": "16:00",
+      "activity": "Lễ Thành Hôn"
+    },
+    {
+      "time": "18:30",
+      "activity": "Đón Khách & Khai Tiệc"
+    },
+    {
+      "time": "20:00",
+      "activity": "Chụp Hình Kỷ Niệm"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "/templates/holymaiden/images/groom.png",
+      "alt": "Fiqri"
+    },
+    {
+      "src": "/templates/holymaiden/images/bride.png",
+      "alt": "Mio"
+    },
+    {
+      "src": "/templates/olive/demo/g1.webp",
+      "alt": "Kỷ niệm 1"
+    },
+    {
+      "src": "/templates/olive/demo/g2.webp",
+      "alt": "Kỷ niệm 2"
+    },
+    {
+      "src": "/templates/olive/demo/g3.webp",
+      "alt": "Kỷ niệm 3"
+    },
+    {
+      "src": "/templates/olive/demo/g4.webp",
+      "alt": "Kỷ niệm 4"
+    }
+  ],
+  "giftAccounts": [
+    {
+      "owner": "Chú rể",
+      "bankName": "MB BANK",
+      "accountNumber": "0332 4071 98",
+      "accountHolder": "M FIQRI HAIKHAR ANWAR",
+      "qrImage": "/templates/olive/demo/qr-groom.webp"
+    },
+    {
+      "owner": "Cô dâu",
+      "bankName": "VIETCOMBANK",
+      "accountNumber": "9376 6658 88",
+      "accountHolder": "AKIYAMA MIO",
+      "qrImage": "/templates/olive/demo/qr-bride.webp"
+    }
+  ],
+  "thankYouText": "Sự hiện diện của bạn là niềm vinh hạnh to lớn cho gia đình chúng mình!",
+  "theme": {
+    "template": "holymaiden-rose",
+    "music": "/templates/holymaiden/audio/shirushi-lisa.mp3"
+  }
+}

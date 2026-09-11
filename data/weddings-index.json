@@ -1,0 +1,44 @@
+{
+  "weddings": [
+    {
+      "slug": "default",
+      "title": "Đám cưới Mặc định (Trang chủ)",
+      "groomName": "Nguyễn Hữu Thông",
+      "brideName": "Hoàng Thị Lâm Huyền",
+      "template": "olive-wax-seal",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "slug": "tuan-lan",
+      "title": "Tuấn & Ngọc Lan",
+      "groomName": "Nguyễn Văn Tuấn",
+      "brideName": "Trần Thị Ngọc Lan",
+      "template": "olive-wax-seal",
+      "createdAt": "2026-09-11T01:09:53.448Z"
+    },
+    {
+      "slug": "hung-mai",
+      "title": "Quang Hùng & Tuyết Mai",
+      "groomName": "Đặng Quang Hùng",
+      "brideName": "Lê Tuyết Mai",
+      "template": "holymaiden-rose",
+      "createdAt": "2026-09-11T01:09:53.449Z"
+    },
+    {
+      "slug": "hoang-phuong",
+      "title": "Minh Hoàng & Hà Phương",
+      "groomName": "Bùi Minh Hoàng",
+      "brideName": "Vũ Hà Phương",
+      "template": "luxury-gold-black",
+      "createdAt": "2026-09-11T01:09:53.449Z"
+    },
+    {
+      "slug": "duc-thao",
+      "title": "Anh Đức & Thu Thảo",
+      "groomName": "Phạm Anh Đức",
+      "brideName": "Đỗ Thu Thảo",
+      "template": "song-hy-do",
+      "createdAt": "2026-09-11T01:09:53.449Z"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "guests": [
+    {
+      "id": "chu-chin-1",
+      "name": "Chú Chín & Gia đình",
+      "order": 1
+    },
+    {
+      "id": "anh-kien-2",
+      "name": "Anh Kiên & Người thương",
+      "order": 2
+    },
+    {
+      "id": "chi-thao-3",
+      "name": "Chị Thảo",
+      "order": 3
+    },
+    {
+      "id": "ban-phuc-4",
+      "name": "Bạn Phúc",
+      "order": 4
+    }
+  ]
+}

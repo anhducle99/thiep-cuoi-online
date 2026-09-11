@@ -1,0 +1,24 @@
+{
+  "guests": [
+    {
+      "id": "co-sau-1",
+      "name": "Cô Sáu & Gia đình",
+      "order": 1
+    },
+    {
+      "id": "ban-dung-2",
+      "name": "Bạn Dũng",
+      "order": 2
+    },
+    {
+      "id": "em-linh-3",
+      "name": "Em Linh",
+      "order": 3
+    },
+    {
+      "id": "anh-khoa-4",
+      "name": "Anh Khoa & Chị Hằng",
+      "order": 4
+    }
+  ]
+}

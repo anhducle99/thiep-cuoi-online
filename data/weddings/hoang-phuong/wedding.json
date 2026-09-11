@@ -1,0 +1,118 @@
+{
+  "welcomeText": "The Wedding Of",
+  "groom": {
+    "fullName": "Bùi Minh Hoàng",
+    "shortName": "Minh Hoàng",
+    "title": "Chú rể",
+    "photo": "https://res.cloudinary.com/doacdf3gx/image/upload/v1781535663/wedding_gallery_bulk/2_xduyqw.jpg",
+    "fatherName": "Bùi Thế Long",
+    "motherName": "Đặng Thị Phương"
+  },
+  "bride": {
+    "fullName": "Vũ Hà Phương",
+    "shortName": "Hà Phương",
+    "title": "Cô dâu",
+    "photo": "https://res.cloudinary.com/doacdf3gx/image/upload/v1781535668/wedding_gallery_bulk/4_jl5m62.jpg",
+    "fatherName": "Vũ Đình Trọng",
+    "motherName": "Ngô Thị Thu"
+  },
+  "groomParents": {
+    "prefix": "Ông Bà",
+    "father": "Hendra Pradipta",
+    "mother": "Sri Wahyuni",
+    "address": "Hà Nội, Việt Nam"
+  },
+  "brideParents": {
+    "prefix": "Ông Bà",
+    "father": "Bambang Lestari",
+    "mother": "Dewi Rahayu",
+    "address": "TP. Hồ Chí Minh, Việt Nam"
+  },
+  "ceremony": {
+    "label": "Lễ Thành Hôn",
+    "venueName": "Grand Ballroom Nusantara",
+    "address": "Số 1 Đại Lộ Thăng Long, Mễ Trì, Nam Từ Liêm, Hà Nội",
+    "date": {
+      "iso": "2026-12-20T08:00:00+07:00",
+      "weekday": "Chủ Nhật",
+      "day": "20",
+      "month": "12",
+      "year": "2026",
+      "time": "08:00",
+      "lunar": "Tức ngày 12 tháng 11 năm Bính Ngọ"
+    },
+    "mapUrl": "https://maps.google.com/?q=Grand+Ballroom+Nusantara"
+  },
+  "reception": {
+    "label": "Tiệc Cưới Mừng",
+    "venueName": "Grand Ballroom Nusantara",
+    "address": "Số 1 Đại Lộ Thăng Long, Mễ Trì, Nam Từ Liêm, Hà Nội",
+    "date": {
+      "iso": "2026-12-20T11:00:00+07:00",
+      "weekday": "Chủ Nhật",
+      "day": "20",
+      "month": "12",
+      "year": "2026",
+      "time": "11:00",
+      "lunar": "Tức ngày 12 tháng 11 năm Bính Ngọ"
+    },
+    "mapUrl": "https://maps.google.com/?q=Grand+Ballroom+Nusantara"
+  },
+  "schedule": [
+    {
+      "time": "08:00",
+      "activity": "Lễ Thành Hôn (Lễ Gia Tiên)"
+    },
+    {
+      "time": "10:30",
+      "activity": "Đón Tiếp Quý Khách & Chụp Hình"
+    },
+    {
+      "time": "11:30",
+      "activity": "Khai Tiệc Mừng Cưới & Cắt Bánh"
+    },
+    {
+      "time": "13:00",
+      "activity": "Giao Lưu Âm Nhạc & Tiễn Khách"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://res.cloudinary.com/doacdf3gx/image/upload/v1781535659/wedding_gallery_bulk/1_ze7wz8.jpg",
+      "alt": "Arga & Nimas — Khoảnh khắc 1"
+    },
+    {
+      "src": "https://res.cloudinary.com/doacdf3gx/image/upload/v1781535663/wedding_gallery_bulk/2_xduyqw.jpg",
+      "alt": "Arga & Nimas — Khoảnh khắc 2"
+    },
+    {
+      "src": "https://res.cloudinary.com/doacdf3gx/image/upload/v1781535665/wedding_gallery_bulk/3_rysxlu.jpg",
+      "alt": "Arga & Nimas — Khoảnh khắc 3"
+    },
+    {
+      "src": "https://res.cloudinary.com/doacdf3gx/image/upload/v1781535668/wedding_gallery_bulk/4_jl5m62.jpg",
+      "alt": "Arga & Nimas — Khoảnh khắc 4"
+    }
+  ],
+  "giftAccounts": [
+    {
+      "owner": "Chú rể",
+      "bankName": "MB BANK",
+      "accountNumber": "2391034674",
+      "accountHolder": "ARGA PRADIPTA",
+      "qrImage": "/templates/olive/demo/qr-groom.webp"
+    },
+    {
+      "owner": "Cô dâu",
+      "bankName": "TECHCOMBANK",
+      "accountNumber": "8829103847",
+      "accountHolder": "NIMAS DYAH AYU",
+      "qrImage": "/templates/olive/demo/qr-bride.webp"
+    }
+  ],
+  "thankYouText": "Sự hiện diện và lời chúc phúc của quý khách là niềm vinh hạnh to lớn cho gia đình chúng mình!",
+  "theme": {
+    "template": "luxury-gold-black",
+    "music": "/templates/andika/audio/wedding-music.mp3"
+  }
+}

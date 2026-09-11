@@ -1,0 +1,24 @@
+{
+  "guests": [
+    {
+      "id": "bac-ba-1",
+      "name": "Bác Ba & Gia đình",
+      "order": 1
+    },
+    {
+      "id": "anh-nam-2",
+      "name": "Anh Nam & Bạn",
+      "order": 2
+    },
+    {
+      "id": "chi-hoa-3",
+      "name": "Chị Hoa",
+      "order": 3
+    },
+    {
+      "id": "ban-thanh-4",
+      "name": "Bạn Thành",
+      "order": 4
+    }
+  ]
+}
