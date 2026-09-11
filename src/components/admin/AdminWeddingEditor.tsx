@@ -9,6 +9,7 @@ import {
   getDefaultPreset,
   resolveThemeColors,
 } from "@/lib/themePresets";
+import { ConfirmModal } from "./ConfirmModal";
 
 const templates: Array<{
   id: ThemeConfig["template"];
@@ -37,6 +38,21 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
   const [editingUrlIdx, setEditingUrlIdx] = useState<number | null>(null);
   const [editingUrlValue, setEditingUrlValue] = useState("");
   const galleryFileInputRef = useRef<HTMLInputElement>(null);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    description?: string;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "warning" | "danger" | "info";
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    onConfirm: () => {},
+  });
 
   const loadTemplateData = useCallback(async (tplId?: ThemeConfig["template"]) => {
     setLoading(true);
@@ -168,12 +184,7 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
     setEditingUrlValue("");
   };
 
-  const handleCopyFrom = async (fromTpl: string) => {
-    if (!fromTpl || fromTpl === selectedTemplate) return;
-    if (!confirm(`Bạn có chắc muốn sao chép toàn bộ nội dung từ mẫu "${templates.find(t => t.id === fromTpl)?.name}" sang mẫu này?`)) {
-      setCopySource("");
-      return;
-    }
+  const executeCopyFrom = async (fromTpl: string) => {
     try {
       const slugParam = slug && slug !== "default" ? `&slug=${encodeURIComponent(slug)}` : "";
       const res = await fetch(`/api/admin/wedding?template=${fromTpl}${slugParam}`, {
@@ -190,12 +201,32 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
             template: selectedTemplate,
           },
         });
-        setMessage(`Đã sao chép nội dung từ mẫu ${templates.find(t => t.id === fromTpl)?.name}. Nhấn "Lưu thay đổi" để áp dụng.`);
+        setMessage(`Đã sao chép nội dung từ mẫu ${templates.find((t) => t.id === fromTpl)?.name}. Nhấn "Lưu thay đổi" để áp dụng.`);
       }
     } catch {
-      alert("Lỗi khi sao chép dữ liệu.");
+      setMessage("Lỗi khi sao chép dữ liệu.");
+    } finally {
+      setCopySource("");
     }
-    setCopySource("");
+  };
+
+  const promptCopyFrom = (fromTpl: string) => {
+    if (!fromTpl || fromTpl === selectedTemplate) return;
+    const sourceName = templates.find((t) => t.id === fromTpl)?.name || fromTpl;
+    const currentName = templates.find((t) => t.id === selectedTemplate)?.name || selectedTemplate;
+    setConfirmModal({
+      isOpen: true,
+      title: "Sao chép nội dung mẫu thiệp",
+      message: `Bạn có chắc muốn sao chép toàn bộ nội dung từ mẫu "${sourceName}" sang mẫu "${currentName}"?`,
+      description: "Lưu ý: Toàn bộ thông tin (họ tên, ngày cưới, địa điểm, ảnh cưới, tài khoản mừng...) từ mẫu được chọn sẽ được nạp vào mẫu này.",
+      confirmText: "Sao chép ngay",
+      cancelText: "Huỷ",
+      variant: "warning",
+      onConfirm: () => {
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+        void executeCopyFrom(fromTpl);
+      },
+    });
   };
 
   const handleSetHome = async (tplId: ThemeConfig["template"]) => {
@@ -208,26 +239,20 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
       });
       if (res.ok) {
         setActiveTemplate(tplId);
-        setMessage(`Đã đặt mẫu "${templates.find(t => t.id === tplId)?.name}" làm mẫu hiển thị chính cho trang chủ!`);
+        setMessage(`Đã đặt mẫu "${templates.find((t) => t.id === tplId)?.name}" làm mẫu hiển thị chính cho trang chủ!`);
       }
     } catch {
-      alert("Lỗi kết nối khi đổi mẫu trang chủ");
+      setMessage("Lỗi kết nối khi đổi mẫu trang chủ.");
     } finally {
       setBusy(false);
     }
   };
 
-  const handleApplyToAll = async () => {
+  const executeApplyToAll = async () => {
     if (!data) return;
-    if (
-      !confirm(
-        `Bạn có chắc muốn sao chép toàn bộ thông tin (họ tên, địa chỉ, ngày cưới, QR...) của mẫu "${currentTplMeta?.name}" áp dụng đồng loạt cho TẤT CẢ các mẫu khác?`,
-      )
-    ) {
-      return;
-    }
     setBusy(true);
     setMessage("Đang đồng bộ cho tất cả các mẫu…");
+    const currentName = templates.find((t) => t.id === selectedTemplate)?.name || selectedTemplate;
     try {
       for (const tpl of templates) {
         await fetch("/api/admin/wedding", {
@@ -246,12 +271,30 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
           }),
         });
       }
-      setMessage(`Đã đồng bộ thông tin của mẫu "${currentTplMeta?.name}" cho TẤT CẢ ${templates.length} mẫu thành công!`);
+      setMessage(`Đã đồng bộ thông tin của mẫu "${currentName}" cho TẤT CẢ ${templates.length} mẫu thành công!`);
     } catch {
-      alert("Lỗi kết nối khi đồng bộ tất cả mẫu.");
+      setMessage("Lỗi kết nối khi đồng bộ tất cả mẫu.");
     } finally {
       setBusy(false);
     }
+  };
+
+  const promptApplyToAll = () => {
+    if (!data) return;
+    const currentName = templates.find((t) => t.id === selectedTemplate)?.name || selectedTemplate;
+    setConfirmModal({
+      isOpen: true,
+      title: "Đồng bộ tất cả các mẫu",
+      message: `Bạn có chắc muốn sao chép toàn bộ thông tin của mẫu "${currentName}" áp dụng đồng loạt cho TẤT CẢ các mẫu khác?`,
+      description: "Lưu ý: Toàn bộ các mẫu thiệp khác trong hệ thống sẽ được cập nhật đồng loạt theo thông tin của mẫu này.",
+      confirmText: "Đồng bộ tất cả",
+      cancelText: "Huỷ",
+      variant: "warning",
+      onConfirm: () => {
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+        void executeApplyToAll();
+      },
+    });
   };
 
   const save = async () => {
@@ -382,10 +425,10 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={handleApplyToAll}
+              onClick={promptApplyToAll}
               disabled={busy}
               className="rounded-lg bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1 font-medium transition cursor-pointer flex items-center gap-1 shadow-sm"
-              title="Sao chép toàn bộ nội dung của mẫu này sang tất cả 8 mẫu còn lại"
+              title="Sao chép toàn bộ nội dung của mẫu này sang tất cả các mẫu còn lại"
             >
               ⚡ Áp dụng cho TẤT CẢ các mẫu
             </button>
@@ -395,8 +438,9 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
               <select
                 value={copySource}
                 onChange={(e) => {
-                  setCopySource(e.target.value);
-                  if (e.target.value) handleCopyFrom(e.target.value);
+                  const val = e.target.value;
+                  setCopySource(val);
+                  if (val) promptCopyFrom(val);
                 }}
                 className="rounded-lg border border-stone-300 bg-white px-2 py-1 text-xs outline-none focus:border-wine"
               >
@@ -1675,6 +1719,21 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
           </div>
         </>
       )}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        description={confirmModal.description}
+        confirmText={confirmModal.confirmText}
+        cancelText={confirmModal.cancelText}
+        variant={confirmModal.variant}
+        busy={busy}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => {
+          setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+          setCopySource("");
+        }}
+      />
     </div>
   );
 }

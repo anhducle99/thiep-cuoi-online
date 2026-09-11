@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { AdminGuestRow, StorageMode } from "@/components/admin/AdminApp";
 import { BLOB_SETUP_MESSAGE } from "@/lib/persistMessages";
 import { adminHeaders } from "@/lib/adminClient";
+import { ConfirmModal } from "./ConfirmModal";
 
 interface AdminDashboardProps {
   guests: AdminGuestRow[];
@@ -40,6 +41,7 @@ export function AdminDashboard({
   const [editName, setEditName] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [guestToDelete, setGuestToDelete] = useState<AdminGuestRow | null>(null);
 
   const getGuestUrl = (guest: AdminGuestRow) => {
     const base = siteUrl || "https://xuanphu.vercel.app";
@@ -50,15 +52,12 @@ export function AdminDashboard({
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return guests;
-    return guests.filter(
-      (g) =>
-        g.name.toLowerCase().includes(q) || g.id.toLowerCase().includes(q),
-    );
+    return guests.filter((g) => g.name.toLowerCase().includes(q));
   }, [guests, query]);
 
-  const notify = (text: string) => {
-    setMessage(text);
-    setTimeout(() => setMessage(""), 2500);
+  const notify = (msg: string) => {
+    setMessage(msg);
+    setTimeout(() => setMessage(""), 3200);
   };
 
   const handleCopy = async (guest: AdminGuestRow) => {
@@ -81,22 +80,20 @@ export function AdminDashboard({
     const name = newName.trim();
     if (!name) return;
     setBusy(true);
-    const res = await fetch("/api/admin/guests", {
+    const param = slug && slug !== "default" ? `?slug=${encodeURIComponent(slug)}` : "";
+    const res = await fetch(`/api/admin/guests${param}`, {
       method: "POST",
       headers: adminHeaders(),
-      body: JSON.stringify({ name, slug: slug !== "default" ? slug : undefined }),
+      body: JSON.stringify({ name }),
     });
-    const data = await res.json().catch(() => ({}));
     setBusy(false);
     if (!res.ok) {
-      notify(
-        data.error ??
-          `Lỗi ${res.status}: không thêm được khách. Kiểm tra Vercel Blob đã Connect chưa.`,
-      );
+      const data = await res.json().catch(() => ({}));
+      notify(data.error ?? "Không thêm được khách.");
       return;
     }
     setNewName("");
-    notify(`Đã thêm: ${data.guest.name}`);
+    notify("Đã thêm khách mời.");
     await onReload();
   };
 
@@ -112,16 +109,20 @@ export function AdminDashboard({
 
   const handleSaveEdit = async (id: string) => {
     const name = editName.trim();
-    if (!name) return;
+    if (!name) {
+      cancelEdit();
+      return;
+    }
     setBusy(true);
-    const res = await fetch(`/api/admin/guests/${encodeURIComponent(id)}`, {
+    const param = slug && slug !== "default" ? `?slug=${encodeURIComponent(slug)}` : "";
+    const res = await fetch(`/api/admin/guests/${encodeURIComponent(id)}${param}`, {
       method: "PATCH",
       headers: adminHeaders(),
-      body: JSON.stringify({ name, slug: slug !== "default" ? slug : undefined }),
+      body: JSON.stringify({ name }),
     });
-    const data = await res.json().catch(() => ({}));
     setBusy(false);
     if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
       notify(data.error ?? "Không cập nhật được.");
       return;
     }
@@ -130,9 +131,13 @@ export function AdminDashboard({
     await onReload();
   };
 
-  const handleDelete = async (guest: AdminGuestRow) => {
-    const ok = window.confirm(`Xóa khách "${guest.name}"? Link cũ sẽ không còn hoạt động.`);
-    if (!ok) return;
+  const handleDelete = (guest: AdminGuestRow) => {
+    setGuestToDelete(guest);
+  };
+
+  const executeDeleteGuest = async () => {
+    if (!guestToDelete) return;
+    const guest = guestToDelete;
     setBusy(true);
     const param = slug && slug !== "default" ? `?slug=${encodeURIComponent(slug)}` : "";
     const res = await fetch(`/api/admin/guests/${encodeURIComponent(guest.id)}${param}`, {
@@ -140,6 +145,7 @@ export function AdminDashboard({
       headers: adminHeaders(),
     });
     setBusy(false);
+    setGuestToDelete(null);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       notify(data.error ?? "Không xóa được.");
@@ -304,6 +310,18 @@ export function AdminDashboard({
             )}
           </ul>
         </div>
+      <ConfirmModal
+        isOpen={!!guestToDelete}
+        title="Xác nhận xóa khách mời"
+        message={`Bạn có chắc muốn xóa khách "${guestToDelete?.name}"?`}
+        description="Lưu ý: Sau khi xóa, link thiệp của vị khách này sẽ không còn mở được nữa."
+        confirmText="Xóa khách"
+        cancelText="Huỷ"
+        variant="danger"
+        busy={busy}
+        onConfirm={() => void executeDeleteGuest()}
+        onCancel={() => setGuestToDelete(null)}
+      />
     </div>
   );
 }

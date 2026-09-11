@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { ConfirmModal } from "./ConfirmModal";
 
 export type AdminTab = "wedding" | "guests" | "rsvp";
 
@@ -45,15 +47,11 @@ export function AdminShell({
   const currentWedding = weddings.find((w) => w.slug === currentSlug);
   const isDefault = currentSlug === "default";
   const viewUrl = isDefault ? "/" : `/${currentSlug}`;
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleDelete = () => {
     if (isDefault) return;
-    const ok = window.confirm(
-      `Bạn có chắc muốn xóa đám cưới "/${currentSlug}" (${currentWedding?.title || currentSlug})?\nDữ liệu khách mời và cấu hình của cặp đôi này sẽ bị xóa.`,
-    );
-    if (ok && onDeleteWedding) {
-      onDeleteWedding(currentSlug);
-    }
+    setIsDeleteModalOpen(true);
   };
 
   return (
@@ -154,6 +152,23 @@ export function AdminShell({
       </header>
 
       <main className="px-4 py-6">{children}</main>
+
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="Xác nhận xóa đám cưới"
+        message={`Bạn có chắc muốn xóa đám cưới "/${currentSlug}" (${currentWedding?.title || currentSlug})?`}
+        description="Lưu ý: Toàn bộ danh sách khách mời, phản hồi tham dự và nội dung thiệp của cặp đôi này sẽ bị xóa hoàn toàn."
+        confirmText="Xóa vĩnh viễn"
+        cancelText="Huỷ"
+        variant="danger"
+        onConfirm={() => {
+          setIsDeleteModalOpen(false);
+          if (onDeleteWedding) {
+            onDeleteWedding(currentSlug);
+          }
+        }}
+        onCancel={() => setIsDeleteModalOpen(false)}
+      />
     </div>
   );
 }
