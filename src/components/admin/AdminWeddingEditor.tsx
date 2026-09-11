@@ -352,6 +352,16 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
   const groomAccount = data?.giftAccounts?.[0] || { owner: "Chú rể", bankName: "", accountNumber: "", accountHolder: "", qrImage: "" };
   const brideAccount = data?.giftAccounts?.[1] || { owner: "Cô dâu", bankName: "", accountNumber: "", accountHolder: "", qrImage: "" };
 
+  const previewUrl = (() => {
+    if (slug && slug !== "default") {
+      return `/${slug}`;
+    }
+    if (selectedTemplate && selectedTemplate !== activeTemplate) {
+      return `/?template=${selectedTemplate}`;
+    }
+    return "/";
+  })();
+
   return (
     <div className="mx-auto max-w-4xl pb-16">
       <div className="mb-4">
@@ -1706,8 +1716,7 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
             </div>
           </section>
 
-          {/* Nút lưu cố định ở cuối màn hình */}
-          <div className="sticky bottom-4 z-30 rounded-2xl bg-stone-900/90 backdrop-blur-md p-4 flex items-center justify-between shadow-2xl">
+          <div className="sticky bottom-4 z-30 rounded-2xl bg-stone-900/90 backdrop-blur-md p-4 flex flex-wrap items-center justify-between gap-3 shadow-2xl">
             <div className="text-xs text-white/80">
               {message ? (
                 <span className="font-semibold text-amber-300">{message}</span>
@@ -1717,14 +1726,27 @@ export function AdminWeddingEditor({ slug }: { slug?: string } = {}) {
                 </span>
               )}
             </div>
-            <button
-              type="button"
-              onClick={() => void save()}
-              disabled={busy}
-              className="rounded-xl bg-emerald-600 hover:bg-emerald-500 px-8 py-3 text-sm font-bold text-white shadow-lg disabled:opacity-50 transition active:scale-95 cursor-pointer"
-            >
-              {busy ? "Đang lưu…" : `Lưu mẫu ${currentTplMeta?.name}`}
-            </button>
+            <div className="flex items-center gap-2.5">
+              <a
+                href={previewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-gold/40 bg-stone-800 hover:bg-stone-700 px-5 py-3 text-sm font-semibold text-amber-200 shadow-md transition active:scale-95 cursor-pointer"
+                title="Mở tab mới xem trước mẫu thiệp này"
+              >
+                <span>👁️</span>
+                <span>Xem thiệp</span>
+                <span className="text-xs opacity-60">↗</span>
+              </a>
+              <button
+                type="button"
+                onClick={() => void save()}
+                disabled={busy}
+                className="rounded-xl bg-emerald-600 hover:bg-emerald-500 px-8 py-3 text-sm font-bold text-white shadow-lg disabled:opacity-50 transition active:scale-95 cursor-pointer"
+              >
+                {busy ? "Đang lưu…" : `Lưu mẫu ${currentTplMeta?.name}`}
+              </button>
+            </div>
           </div>
         </>
       )}

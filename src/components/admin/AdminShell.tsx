@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { ConfirmModal } from "./ConfirmModal";
 
@@ -46,7 +45,6 @@ export function AdminShell({
 
   const currentWedding = weddings.find((w) => w.slug === currentSlug);
   const isDefault = currentSlug === "default";
-  const viewUrl = isDefault ? "/" : `/${currentSlug}`;
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleDelete = () => {
@@ -73,18 +71,6 @@ export function AdminShell({
               <span className="hidden sm:inline">Tạo đám cưới mới</span>
               <span className="sm:hidden">Tạo mới</span>
             </button>
-
-            <Link
-              href={viewUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-lg border border-gold/40 bg-white px-2.5 py-1.5 text-xs font-medium text-wine shadow-sm hover:bg-cream-light transition-colors"
-              title="Mở xem trang thiệp của đám cưới đang chọn"
-            >
-              <span>👁️</span>
-              <span className="hidden sm:inline">Xem thiệp</span>
-              <span className="text-[10px] text-ink/40">↗</span>
-            </Link>
 
             <button
               type="button"
